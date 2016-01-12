@@ -1,0 +1,7 @@
+#!/bin/bash
+# originally by https://github.com/fbartels/scripts/tree/master/avm-fritzbox/fritzbox-login.sh
+# seperate login data file
+# Create a fritzbox user only with smarthome rights
+
+avmfbuser=${tempuser:-""}
+avmfbpwd=${temppwd:-""}

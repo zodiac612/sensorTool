@@ -1,0 +1,88 @@
+[global]
+maxtime = 2355 
+mintime = 0700
+
+[test]
+test_actinterval = 5
+test_data_save_interval = 10
+test_maxtime = 2355
+
+[inmonitor]
+titel                   = 'Raspberry PI Status'
+data_save_interval      = 120
+intervalstart_1         = 0900
+intervalstop_1          = 1100
+intervalstart_2         = 1130
+intervalstop_2          = 1330
+intervalstart_3         = 1400
+intervalstop_3          = 1600
+intervalstart_4         = 1630
+intervalstop_4          = 1830
+count_of_sensors        = 5
+trigger_start_count     = 3
+trigger_end_count       = 15
+
+[Sensor0]
+name                    = Keller
+bme280                  = True 
+#delta_humidity         = 0.3
+#delta_temperature      = 0.1
+#delta_Message          = Keller: Starke Veraenderung
+threshold_high_humidity = 58
+#trigger_count          = 2
+#trigger_start          = 3
+#trigger_end            = 15
+#httpdport		= 12340
+mobile1                 = 4917x12345678
+
+[Sensor1]
+name                      = Bad
+hex                       = b8
+#threshold_low_humidity   = 63
+threshold_low_temperature = 16.9
+delta_humidity            = -6
+#delta_temperature        = 0.1
+delta_Message             = Bad: Starke Veraenderung
+trigger_count             = 8
+message                   = Bad Fenster zumachen!
+#httpdport		  = 12341
+mobile1                   = 4917x12345678
+mobile2                   = 4917x12345678
+
+[Sensor2]
+name                      = Zimmer2
+hex                       = c4
+#threshold_low_humidity   = 63
+threshold_low_temperature = 17
+#delta_temperature	  = 0.2
+#delta_humidity           = 2
+#delta_message            = WC: Starke Veraenderung
+message                   = WC unter 17
+#httpdport		  = 123422
+mobile1                   = 4917x12345678
+
+[Sensor3]
+name                    = Zimmer3
+hex                     = b0
+httpdport		= 12343
+mobile1                 = 4917x12345678
+aussen                  = true
+
+[Sensor4]
+name                    = Aussen
+hex                     = ec
+httpdport		= 12344
+mobile1                 = 4917x12345678
+
+[db]
+server = localhost
+password = x
+http_timeout = 1
+
+[lacrosse]
+actinterval         = 10
+httpdport           = 12330
+
+[check]
+interval	    = 300
+checkScript         = /home/pi/checkInMon.sh

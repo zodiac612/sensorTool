@@ -1,0 +1,7 @@
+#Config File
+*.conf
+
+#pyc Files
+*.pyc
+
+#php files temporary blocked

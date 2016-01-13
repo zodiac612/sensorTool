@@ -18,7 +18,7 @@ import httpservice # for rt service
 
 #config einlesen
 config = ConfigParser.ConfigParser()
-config.read('../sensorTool.conf')
+config.read('/home/pi/sensorTool/sensorTool.conf')
 #print config.sections()
 
 #ACTINTERVAL    = config.getint('lacrosse', 'actinterval')

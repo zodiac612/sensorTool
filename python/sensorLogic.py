@@ -18,7 +18,7 @@ from tx35dth import tx35dth
 import mysql.connector #import MySQLConnection, Error
 
 config = ConfigParser.ConfigParser()
-config.read('../sensorTool.conf')
+config.read('/home/pi/sensorTool/sensorTool.conf')
 print config.sections()
 
 # constants -------------------------------------------------------------------

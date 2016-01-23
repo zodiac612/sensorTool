@@ -248,7 +248,13 @@ class tx35dth(object):
                 self.__delta_message += self.__delta_message_org 
                 self.__delta_message += Tmsg
                 self.__delta_message += RHmsg
-              
+                self.__delta_message += '\n['
+                self.__delta_message += str(self.__time)[-8:-3]
+                self.__delta_message += '] '
+                self.__delta_message += str(self.__temperature)
+                self.__delta_message += 'C; '                
+                self.__delta_message += str(self.__humidity)
+                self.__delta_message += '%'
             
                          
             return result

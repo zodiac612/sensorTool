@@ -178,6 +178,32 @@ def getInfoCSV(): #degC, hPa, hRel, vBad, vWozi, vKeller, vAussen):
         vReturnText = vReturnText + str(dictSensors[vKey].GetInfo(True, False))
     return vReturnText
 
+def getHTML():
+    vhttpResult  = ''
+    vhttpResult += '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">'
+    vhttpResult += '<html xmlns="http://www.w3.org/1999/xhtml">'
+    vhttpResult += '<head>'
+    vhttpResult += '<title>Raspberry PI Status</title>'
+    vhttpResult += '<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-15" />'
+    vhttpResult += '</head>'
+    vhttpResult += '<body bgcolor="#CCCCCC">'
+    vhttpResult += '<h3>Raspberry PI SensorTool Status<BR />'+datetime.datetime.now().strftime('%Y-%m-%d')+'</h3>'
+    for vKey in dictSensors:
+        vhttpResult += dictSensors[vKey].GetHttpTable()
+        vhttpResult += '<BR />'
+    vhttpResult += '<DIV MARGIN="5"><TABLE BORDER=1><TR>'
+    vhttpResult += '<TD><strong>GPIO</strong></TD>'
+    vhttpResult += '<TD>RELAIS</TD>'
+    vhttpResult += '<TD>LED</TD>'
+    vhttpResult += '</TR><TR>'
+    vhttpResult += '<TD>'+str(datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'))[11:16]+'</TD>'
+    vhttpResult += '<TD>'+str(RelayIN1.isOn)+str(RelayIN2.isOn)+'</TD>'
+    vhttpResult += '<TD>'+str(LedG.isOn)+str(LedY.isOn)+str(LedR.isOn)+'</TD>'
+    vhttpResult += '</TR></TABLE></DIV>' 
+    vhttpResult += '</body>'
+    vhttpResult += '</html>'
+    return vhttpResult
+
 # find out private ip address -------------------------------------------------
 ip = [(s.connect(('8.8.8.8', 80)), s.getsockname()[0], s.close()) for s in [socket.socket(socket.AF_INET, socket.SOCK_DGRAM)]][0][1]
 #print datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'), "My private IP is:", ip
@@ -185,6 +211,7 @@ ip = [(s.connect(('8.8.8.8', 80)), s.getsockname()[0], s.close()) for s in [sock
 # init  -----------------------------------------------------------------------
 
 httpd = httpservice.Service(2222)
+httpd1 = httpservice.Service(8086)
 #led = gpio.GPIOout(26)
 refreshTime = time.time() + INTERVAL;
 
@@ -216,6 +243,11 @@ while time.strftime('%H%M') < MAXTIME: #timeDuration <= MAXTIME:
     dictHTTPD['S3RH']        = dictSensors[3].GetRH()
     dictHTTPD['S4T']         = dictSensors[4].GetT()
     dictHTTPD['S4RH']        = dictSensors[4].GetRH()
+    
+    vhttpResult = getHTML()
+    
+    if httpd1.provideData(vhttpResult):
+        print datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'), "direct request from", httpd1.addr[0]
 
     if httpd.provideData(dictHTTPD):
         print datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'), "direct request from", httpd.addr[0]

@@ -44,17 +44,17 @@ class tx35dth(object):
             self.__ActTriggerLow         = 0
             self.__ActTriggerHigh        = 0
             self.__delta_counter         = 0
-            self.__temperature           = 0.0
-            self.__humidity              = 0.0
-            self.__pressure              = 0
-            self.__time                  = '0000-00-00 00:00:00'
+            self.__temperature           = None
+            self.__humidity              = None
+            self.__pressure              = None
+            self.__time                  = None
             self.__valueT                = False
             self.__valueRH               = False
             self.__valuePA               = False
             self.__sendMessage           = True
             self.__mobiles               = dictSensor['mobiles']
-            self.__taupunkt              = 0
-            self.__absolutefeuchte       = 0
+            self.__taupunkt              = None
+            self.__absolutefeuchte       = None
 
             self.__delta_stop_trigger    = 2
             self.__delta_stop_counter    = 0
@@ -63,8 +63,30 @@ class tx35dth(object):
             self.__last_RH_exists = False
             self.__last_humidity = 0.0
             self.__last_time = ''
+            self.__humidity_count = None
+            self.__temperature_count = None
+            self.__humidity_avg = None
+            self.__temperature_avg = None            
 #                self.__CompareValuesPresent = false
 
+        def __setTemperatureAvg(self, vT):
+            if self.__temperature_count is None:
+                self.__temperature_count = 1
+                self.__temperature_avg = vT
+            else:
+                vCalVal = self.__temperature_avg * self.__temperature_count
+                self.__temperature_count = self.__temperature_count + 1
+                self.__temperature_avg = ((vCalVal + vT)/ self.__temperature_count) 
+                
+        def __setHumidityAvg(self, vRH):
+            if self.__humidity_count is None:
+                self.__humidity_count = 1
+                self.__humidity_avg = vRH
+            else:
+                vCalVal = self.__humidity_avg * self.__humidity_count
+                self.__humidity_count = self.__humidity_count + 1
+                self.__humidity_avg = ((vCalVal + vRH)/ self.__humidity_count)
+                
         def SetSensorData(self, vLine, vTypeBME280=False):
             #print vLine
             
@@ -82,7 +104,8 @@ class tx35dth(object):
                     else:
                         self.__last_T_exists = True
                         self.__last_temperature = self.__temperature
-                    self.__temperature = vLine['T']    
+                    self.__temperature = vLine['T']
+                    self.__setTemperatureAvg(vLine['T'])    
                                         
                 
                 if 'RH' in vLine:
@@ -93,6 +116,7 @@ class tx35dth(object):
                             self.__last_RH_exists = True
                             self.__last_humidity = self.__humidity
                         self.__humidity = vLine['RH']
+                        self.__setHumidityAvg(vLine['RH'])
                 
                 if 'Time' in vLine:
                     self.__last_time = self.__time
@@ -163,6 +187,12 @@ class tx35dth(object):
         
         def GetPA(self):
             return self.__pressure
+        
+        def GetTAvg(self):
+            return self.__temperature_avg            
+        
+        def GetRHAvg(self):
+            return self.__humidity_avg
         
         def GetTime(self):
             return self.__time
@@ -346,7 +376,11 @@ class tx35dth(object):
             else:
                 result = str(self.__name)+': '
                 result = result + str(self.__temperature)+'C; '
+                result = result + str(self.__temperature_avg)+'C; '
                 result = result + str(self.__humidity)+'%; '
+                result = result + str(self.__humidity_avg)+'%; '
+                result = result + str(self.__temperature_avg)+'C; '
+
                 if self.__bme280:
                     result = result + str(self.__pressure)+'hPa; '
                 
@@ -419,6 +453,47 @@ class tx35dth(object):
                 result += ' self.__last_RH_exists: ' + str(self.__last_RH_exists) + '\n'
                 result += ' self.__last_humidity: ' + str(self.__last_humidity) + '\n'
                 result += ' self.__last_time: ' + str(self.__last_time) + '\n'
+                result += ' self.__temperature_count: ' + str(self.__temperature_count) + '\n'
+                result += ' self.__humidity_count: ' + str(self.__humidity_count) + '\n'
+                result += ' self.__temperature_avg: ' + str(self.__temperature_avg) + '\n'
+                result += ' self.__humidity_avg: ' + str(self.__humidity_avg) + '\n'
                 #result += ' : ' + str() + '\n'
                     
+            return result
+
+        def GetHttpTable(self, bheader=True):
+            result = ''
+            result += '<DIV MARGIN="5"><TABLE BORDER=1>'
+            if bheader:
+                result += '<TR>'
+                result += '<TD><strong>' + self.__name + '</strong></TD>'
+                if self.__temperature <> None:
+                    result += '<TD>T</TD>'
+                if self.__humidity <> None:
+                    result += '<TD>RH</TD>'
+                if self.__bme280:            
+                    result += '<TD>pa</TD>'
+                result += '</TR>'
+            
+            result += '<TR>'
+            result += '<TD>' + str(self.__time)[11:16] + '</TD>'
+            if self.__temperature <> None:
+                result += '<TD>'+ str(self.__temperature)+'C</TD>'
+            if self.__humidity <> None:
+                result += '<TD>'+str(self.__humidity)+'%</TD>'
+            if self.__bme280:            
+                result += '<TD>'+str(self.__pressure)+'</TD>'
+            result += '</TR>' 
+            
+            result += '<TR>'
+            result += '<TD>AVG</TD>'
+            if self.__temperature <> None:
+                result += '<TD>'+ str(round(self.__temperature_avg,2))+'C</TD>'
+            if self.__humidity <> None:
+                result += '<TD>'+str(round(self.__humidity_avg,2))+'%</TD>'
+            if self.__bme280:            
+                result += '<TD><BR /></TD>'
+            result += '</TR>'
+            result += '</TABLE></DIV>'    
+              
             return result

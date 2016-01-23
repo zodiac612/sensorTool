@@ -35,6 +35,8 @@ Check humidity in the cellar to avoid to much humidity by starting a fan.
   - git clone git://github.com/tgalal/yowsup.git
 - raspyrfm:
   - git clone https://github.com/Phunkafizer/RaspyRFM
+- spi:
+  - http://www.100randomtasks.com/simple-spi-on-raspberry-pi 
 
 ## Detailed description
 The sensorTool has two main components:

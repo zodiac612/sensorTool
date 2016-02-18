@@ -2,7 +2,7 @@
 # originally by https://github.com/fbartels/scripts/tree/master/avm-fritzbox/fritzbox-smarthome.sh
 # API definition: http://avm.de/fileadmin/user_upload/Global/Service/Schnittstellen/AHA-HTTP-Interface.pdf
 #source $HOME/bin/fritzbox-login.sh
-source ./fritzbox-login.sh
+source /home/pi/sensorTool/sh/fritzbox-login.sh
 CURLCMD="curl -s http://$avmfbip/webservices/homeautoswitch.lua"
 
 # fritzbox-smarthome.sh 24:65:11:C7:80:BF
@@ -54,7 +54,8 @@ for ain in $ainlist; do
 	elif [[ $1 == "list" ]]; then
 		echo "Switch with AIN $ain ($ainname) ist currently $ainstate2 [$ainpower mW|$aintemperature °C]."
 	elif [[ $1 == "csvlist" ]]; then
-		echo "$ain;$ainname;$ainstate2;$ainpower;$aintemperature;"
+		#echo "$ain;$ainname;$ainstate2;$ainpower;$aintemperature;"
+		echo "{\"id\": \"$ain\", \"name\": \"$ainname\", \"state\": \"$ainstate2\", \"mW\": $ainpower, \"T\": $aintemperature}"
 	else
 		# else ask interactively to toggle the switch (interactive mode)
 		read -p "Do you want to toggle $ainname ($ain)? Switch is currently $ainstate2. (y/n) " -n 1 -r

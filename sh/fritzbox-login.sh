@@ -8,7 +8,7 @@
 # export tempid=/tmp/avmsidpowerline
 # 
 
-source fritzbox-login.conf
+source /home/pi/sensorTool/sh/fritzbox-login.conf
 avmfbip=${tempip:-fritz.box}
 
 challenge=$(curl -s http://$avmfbip/login_sid.lua |  grep -o "<Challenge>[a-z0-9]\{8\}" | cut -d'>' -f 2)

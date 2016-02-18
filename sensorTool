@@ -9,30 +9,37 @@
 ### END INIT INFO
 
 MYPATH="/home/pi/sensorTool/python"
+LOGFILE="/var/sensorTool/sensorService.log"
 SCRIPT1="sensorHttpService.py"
 SCRIPT2="sensorLogic.py"
+SCRIPT3="/home/pi/sensorTool/sh/checkSensorTool.sh"
 #SCRIPT3="checkInMon.py"
 
 WIFIRECONNECT="/home/pi/sensorTool/wifi-reconnect.sh"
 
 case "$1" in 
     start)
-#	value=$( ps ax | grep -c "$WIFIRECONNECT" )
-#	if [ $value -lt 2 ]
-#	then
-#		echo "Starting wifi reconnect script"
-#		$WIFIRECONNECT > /dev/null 2>&1 &
-#	fi
+	value=$( ps ax | grep -c "$WIFIRECONNECT" )
+	if [ $value -lt 2 ]
+	then
+		echo "Starting wifi reconnect script"
+		$WIFIRECONNECT > /dev/null 2>&1 &
+	fi
+	echo "Timeservice force update"
+	service ntp stop
 	ntpd -q -g -x -n
-	sleep 2
 	service ntp start
 	sleep 2
 	echo "Starting sensorTool"
 #	$MYPATH/$SCRIPT1 start >/dev/null 2>&1 &
-	echo '' > /home/pi/sensorService.log	
-	$MYPATH/$SCRIPT1 start >/home/pi/sensorService.log 2>&1 &
-	$MYPATH/$SCRIPT2 start >/dev/null 2>&1 &
+	echo '' > $LOGFILE
+	$MYPATH/$SCRIPT1 start >/dev/null 2>&1 &
+	$MYPATH/$SCRIPT2 start >>$LOGFILE 2>&1 &
 #	$MYPATH/$SCRIPT3 start >/dev/null 2>&1 &
+        ;;
+    test)
+	$MYPATH/$SCRIPT1 test >/dev/null 2>&1 &
+	$MYPATH/$SCRIPT2 test
         ;;
     testService)
         echo "(Re)Starting ".$SCRIPT1." in verbose mode"
@@ -44,10 +51,9 @@ case "$1" in
 	killall $SCRIPT2 >/dev/null 2>&1
         $MYPATH/$SCRIPT2 test
         ;;
-    testPCheck)
+    status)
         echo "(Re)Starting ".$SCRIPT3." in verbose mode"
-	killall $SCRIPT3 >/dev/null 2>&1
-        $MYPATH/$SCRIPT3 test
+        $SCRIPT3
         ;;
     stop)
         echo "Stopping sensorTool"
@@ -61,7 +67,7 @@ case "$1" in
 	/home/pi/LedSchalten aus
         ;;
     *)
-        echo "Usage: service sensorTool start|stop|testService|testLogic|testPCheck"
+        echo "Usage: service sensorTool start|stop|testService|testLogic|status"
         exit 1
         ;;
 esac

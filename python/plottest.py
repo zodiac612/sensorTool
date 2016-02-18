@@ -1,7 +1,6 @@
 #!/usr/bin/python
 # -*- coding: latin-1 -*-
 # testskript for drawing a line chart 
-
 import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
@@ -16,11 +15,11 @@ plt.ylim([0,100])
 plt.xlabel('Zeit')
 plt.ylabel('Werte')
 plt.title('Chart')
-plt.plot(vZeit, vLF, marker='o', linestyle='--', color='r', label='RH')
-plt.plot(vZeit, vTemp1, marker='p', linestyle='-', color='g', label='T1')
+plt.plot(vZeit, vLF,    marker='o', linestyle='--', color='r', label='RH')
+plt.plot(vZeit, vTemp1, marker='p', linestyle='-',  color='g', label='T1')
 plt.plot(vZeit, vTemp2, marker='*', linestyle='-.', color='c', label='T2')
-plt.plot(vZeit, vTemp3, marker='D', linestyle=':', color='b', label='T3')
+plt.plot(vZeit, vTemp3, marker='D', linestyle=':',  color='b', label='T3')
 lgd = plt.legend(loc='center left', bbox_to_anchor=(1, 0.87))
-plt.savefig('example01.png', format='png', bbox_extra_artists=(lgd,), bbox_inches='tight')
+plt.savefig('/var/sensorTool/example01.png', format='png', bbox_extra_artists=(lgd,), bbox_inches='tight')
 #plt.show()
 #plt.plot.saveFile("test.png")

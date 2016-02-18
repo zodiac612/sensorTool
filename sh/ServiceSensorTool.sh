@@ -8,12 +8,12 @@
 # Description:       This service is used to gather data from different sources and send them to the cloud server/database. Furthermore, it adds an URL link to the local IP.
 ### END INIT INFO
 
-MYPATH="/home/pi/sensor/python"
+MYPATH="/home/pi/sensorTool/python"
 SCRIPT1="sensorHttpService.py"
 SCRIPT2="sensorLogic.py"
-#SCRIPT3="checkInMon.py"
+SCRIPT3="/home/pi/sensorTool/sh/checkSensorTool.sh"
 
-WIFIRECONNECT="/home/pi/inmonitor/wifi-reconnect.sh"
+WIFIRECONNECT="/home/pi/sensorTool/wifi-reconnect.sh"
 
 case "$1" in 
     start)
@@ -44,10 +44,9 @@ case "$1" in
 	killall $SCRIPT2 >/dev/null 2>&1
         $MYPATH/$SCRIPT2 test
         ;;
-    testPCheck)
+    check)
         echo "(Re)Starting ".$SCRIPT3." in verbose mode"
-	killall $SCRIPT3 >/dev/null 2>&1
-        $MYPATH/$SCRIPT3 test
+        $SCRIPT3
         ;;
     stop)
         echo "Stopping sensorTool"

@@ -2,62 +2,67 @@ from __builtin__ import True
 import math
 class tx35dth(object):
         def __init__(self, dictSensor):
-            self.__hexCode               = dictSensor['hex']
-            self.__bme280                = dictSensor['bme280']
-            self.__name                  = dictSensor['name']
-            self.__message               = ''
-            self.__message_org           = dictSensor['message']
-            self.__delta_message         = ''
-            self.__delta_message_org     = dictSensor['delta_message']            
+            self.__hexCode = dictSensor['hex']
+            self.__bme280 = dictSensor['bme280']
+            self.__name = dictSensor['name']
+            self.__message = ''
+            self.__message_org = dictSensor['message']
+            self.__delta_message = ''
+            self.__delta_message_org = dictSensor['delta_message']            
 
-            self.__bool_delta_RH         = False
+            self.__bool_delta_RH = False
             if 'delta_humidity' in dictSensor:
-                self.__delta_humidity    = dictSensor['delta_humidity']
-                self.__bool_delta_RH     = True
+                self.__delta_humidity = dictSensor['delta_humidity']
+                self.__bool_delta_RH = True
 
-            self.__bool_delta_T            = False
+            self.__bool_delta_T = False
             if 'delta_temperature' in dictSensor:
-                self.__delta_temperature   = dictSensor['delta_temperature']
-                self.__bool_delta_T        = True            
+                self.__delta_temperature = dictSensor['delta_temperature']
+                self.__bool_delta_T = True            
             
-            self.__bool_low_RH           = False
+            self.__bool_low_RH = False
             if 'threshold_low_humidity' in dictSensor:
-                self.__threshold_low_humidity      = dictSensor['threshold_low_humidity']
-                self.__bool_low_RH                 = True
+                self.__threshold_low_humidity = dictSensor['threshold_low_humidity']
+                self.__bool_low_RH = True
 
-            self.__bool_low_T            = False
+            self.__bool_low_T = False
             if 'threshold_low_temperature' in dictSensor:
-                self.__threshold_low_temperature   = dictSensor['threshold_low_temperature']
-                self.__bool_low_T                  = True
+                self.__threshold_low_temperature = dictSensor['threshold_low_temperature']
+                self.__bool_low_T = True
 
-            self.__bool_high_RH           = False
+            self.__bool_high_RH = False
             if 'threshold_high_humidity' in dictSensor:
-                self.__threshold_high_humidity      = dictSensor['threshold_high_humidity']
-                self.__bool_high_RH                 = True
+                self.__threshold_high_humidity = dictSensor['threshold_high_humidity']
+                self.__bool_high_RH = True
 
-            self.__bool_high_T            = False
+            self.__bool_high_T = False
             if 'threshold_high_temperature' in dictSensor:
-                self.__threshold_high_temperature   = dictSensor['threshold_high_temperature']
-                self.__bool_high_T                  = True
+                self.__threshold_high_temperature = dictSensor['threshold_high_temperature']
+                self.__bool_high_T = True
                 
-            self.__trigger_count         = dictSensor['trigger_count']
-            self.__ActTriggerLow         = 0
-            self.__ActTriggerHigh        = 0
-            self.__delta_counter         = 0
-            self.__temperature           = None
-            self.__humidity              = None
-            self.__pressure              = None
-            self.__time                  = None
-            self.__valueT                = False
-            self.__valueRH               = False
-            self.__valuePA               = False
-            self.__sendMessage           = True
-            self.__mobiles               = dictSensor['mobiles']
-            self.__taupunkt              = None
-            self.__absolutefeuchte       = None
+            if 'fritzactor' in dictSensor:
+                self.__fritzactor = dictSensor['fritzactor']
+            else:
+                self.__fritzactor = None
+                
+            self.__trigger_count = dictSensor['trigger_count']
+            self.__ActTriggerLow = 0
+            self.__ActTriggerHigh = 0
+            self.__delta_counter = 0
+            self.__temperature = None
+            self.__humidity = None
+            self.__pressure = None
+            self.__time = None
+            self.__valueT = False
+            self.__valueRH = False
+            self.__valuePA = False
+            self.__sendMessage = True
+            self.__mobiles = dictSensor['mobiles']
+            self.__taupunkt = None
+            self.__absolutefeuchte = None
 
-            self.__delta_stop_trigger    = 2
-            self.__delta_stop_counter    = 0
+            self.__delta_stop_trigger = 2
+            self.__delta_stop_counter = 0
             self.__last_T_exists = False               
             self.__last_temperature = 0.0
             self.__last_RH_exists = False
@@ -68,6 +73,8 @@ class tx35dth(object):
             self.__humidity_avg = None
             self.__temperature_avg = None            
 #                self.__CompareValuesPresent = false
+            self.__StateThreshold = 'g' # y, r
+            self.__StateDelta = 'g' # y, r
 
         def __setTemperatureAvg(self, vT):
             if self.__temperature_count is None:
@@ -76,7 +83,7 @@ class tx35dth(object):
             else:
                 vCalVal = self.__temperature_avg * self.__temperature_count
                 self.__temperature_count = self.__temperature_count + 1
-                self.__temperature_avg = ((vCalVal + vT)/ self.__temperature_count) 
+                self.__temperature_avg = ((vCalVal + vT) / self.__temperature_count) 
                 
         def __setHumidityAvg(self, vRH):
             if self.__humidity_count is None:
@@ -85,10 +92,10 @@ class tx35dth(object):
             else:
                 vCalVal = self.__humidity_avg * self.__humidity_count
                 self.__humidity_count = self.__humidity_count + 1
-                self.__humidity_avg = ((vCalVal + vRH)/ self.__humidity_count)
+                self.__humidity_avg = ((vCalVal + vRH) / self.__humidity_count)
                 
         def SetSensorData(self, vLine, vTypeBME280=False):
-            #print vLine
+            # print vLine
             
             boolGo = False
             if 'ID' in vLine:
@@ -140,7 +147,7 @@ class tx35dth(object):
                 vT = float(self.__temperature)
                 vRH = float(self.__humidity)
 
-                print str(self.__name) + ' # ' + str(vT) + ' # ' + str(vRH) 
+                # print str(self.__name) + ' # ' + str(vT) + ' # ' + str(vRH) 
             
                 # Temperatur in Kelvin
                 vTK = vT + 273.15
@@ -150,7 +157,7 @@ class tx35dth(object):
                 # Molekulargewicht des Wasserdampfes kg/kmol
                 vMw = 18.016
                 
-                #???
+                # ???
                 vConstX = 6.1078
                 
                 # Variablen fuer Taupunkt ueber Wasser, Temperatur groesser gleich und unter 0 
@@ -160,16 +167,16 @@ class tx35dth(object):
                     vA = 7.6
                     vB = 240.7
                 
-                vExp1 = (vA+vT)/(vB+vT)
+                vExp1 = (vA + vT) / (vB + vT)
                 # Saettigungsdampfdruck in hPa                
-                vSDD             = vConstX * (10**((vA*vT)/(vB+vT)))
+                vSDD = vConstX * (10 ** ((vA * vT) / (vB + vT)))
                 # Dampfdruck in hPa
-                vDD              = vRH / 100 * vSDD
+                vDD = vRH / 100 * vSDD
                 # Taupunkttemperatur in grad Celsius
-                vV               = math.log10((vDD/vConstX))
-                vTauPunkt        = (vB*vV)/(vA-vV)
-                self.__taupunkt  = vTauPunkt
-                vAbsoluteFeuchte = (10**5)*(vMw/vRStar)*(vDD/vTK)
+                vV = math.log10((vDD / vConstX))
+                vTauPunkt = (vB * vV) / (vA - vV)
+                self.__taupunkt = vTauPunkt
+                vAbsoluteFeuchte = (10 ** 5) * (vMw / vRStar) * (vDD / vTK)
                 self.__absolutefeuchte = vAbsoluteFeuchte 
 #            return vAbsoluteFeuchte
         
@@ -177,7 +184,7 @@ class tx35dth(object):
             return self.__hexCode
 
         def GetBME(self):
-            return self.__bme280#
+            return self.__bme280  #
         
         def GetT(self):
             return self.__temperature
@@ -196,6 +203,9 @@ class tx35dth(object):
         
         def GetTime(self):
             return self.__time
+
+        def GetFritzActor(self):
+            return self.__fritzactor
         
         def GetTriggerCount(self):
             return self.__trigger_count 
@@ -206,7 +216,7 @@ class tx35dth(object):
         def GetMessage(self):
             return self.__message
         
-        def SetSendMessage(self, vBool = True):
+        def SetSendMessage(self, vBool=True):
             self.__sendMessage = vBool
             
         def GetSendMessage(self):
@@ -219,15 +229,26 @@ class tx35dth(object):
             self.__delta_counter = iValue
             
         def SetThresholdHighHumidity(self, fValue):
-            #print 'tx35dth: ' + str(fValue)
+            # print 'tx35dth: ' + str(fValue)
             self.__threshold_high_humidity = fValue
             self.__bool_high_RH = True
             
         def GetThresholdHighHumidity(self):
-            if self.__bool_high_RH:
+            if self.__bool_high_RH: 
                 return self.__threshold_high_humidity
             else:
                 return False
+        
+        def SetThresholdLowTemperature(self, fValue):
+            # print 'tx35dth: ' + str(fValue)
+            self.__threshold_low_temperature = fValue
+            self.__bool_low_T = True
+            
+        def GetThresholdLowTemperature(self):
+            if self.__bool_low_T: 
+                return self.__threshold_low_temperature
+            else:
+                return False        
         
         def GetDelta(self):
             result = False
@@ -236,7 +257,7 @@ class tx35dth(object):
             if self.__last_T_exists:
                 if self.__bool_delta_T:
                     vDeltaT = self.__temperature - self.__last_temperature
-                    #print str(self.__temperature) +' - ' + str(self.__last_temperature) + ' = ' +str(vDeltaT)
+                    # print str(self.__temperature) +' - ' + str(self.__last_temperature) + ' = ' +str(vDeltaT)
                     if abs(vDeltaT) >= self.__delta_temperature:
                         Tmsg += '\n['
                         Tmsg += str(self.__time)[-8:-3]
@@ -250,11 +271,11 @@ class tx35dth(object):
                         Tmsg += str(vDeltaT)
                         result = True
             
-            print str(self.__last_RH_exists) +'#'+ str(self.__bool_delta_RH)            
+            # print str(self.__last_RH_exists) +'#'+ str(self.__bool_delta_RH)            
             if self.__last_RH_exists:
                 if self.__bool_delta_RH:
                     vDeltaRH = self.__humidity - self.__last_humidity
-                    print self.__name + str(vDeltaRH) + '#' +str(self.__delta_humidity)+ '#' + str(self.__humidity)+ ' - ' + str(self.__last_humidity)
+                    # print self.__name + str(vDeltaRH) + '#' +str(self.__delta_humidity)+ '#' + str(self.__humidity)+ ' - ' + str(self.__last_humidity)
                     if self.__delta_humidity < 0:
                         if vDeltaRH <= self.__delta_humidity:
                             result = True
@@ -278,24 +299,23 @@ class tx35dth(object):
                 self.__delta_message += self.__delta_message_org 
                 self.__delta_message += Tmsg
                 self.__delta_message += RHmsg
-                self.__delta_message += '\n['
-                self.__delta_message += str(self.__time)[-8:-3]
-                self.__delta_message += '] '
-                self.__delta_message += str(self.__temperature)
-                self.__delta_message += 'C; '                
-                self.__delta_message += str(self.__humidity)
-                self.__delta_message += '%'
-            
                          
             return result
         
         def GetDeltaMessage(self):
+            self.__delta_message += '\n['
+            self.__delta_message += str(self.__time)[-8:-3]
+            self.__delta_message += '] '
+            self.__delta_message += str(self.__temperature)
+            self.__delta_message += 'C; '                
+            self.__delta_message += str(self.__humidity)
+            self.__delta_message += '%'
             return self.__delta_message
                 
 #         def SetActTrigger(self, iInt):
 #             self.__ActTriggerLow = iInt
 #             
-#         def GetActTrigger(self):
+#         def GetActTrigger(self): 
 #             return self.__ActTriggerLow
         
         def GetMobiles(self):
@@ -307,31 +327,39 @@ class tx35dth(object):
             RHmsg = ''
             
             vBoolHigh = False
-            if self.__bool_high_RH and self.__bool_high_T:
+            if self.__bool_high_RH and self.__bool_high_T and self.__temperature is not None and self.__humidity is not None:
                 if self.__temperature > self.__threshold_high_temperature and self.__humidity > self.__threshold_high_humidity:
                     self.__ActTriggerHigh = self.__ActTriggerHigh + 1
-            elif self.__bool_high_RH and self.__bool_high_T == False:
+            elif self.__bool_high_RH and self.__bool_high_T == False and self.__humidity is not None:
                 if self.__humidity > self.__threshold_high_humidity:
                     self.__ActTriggerHigh = self.__ActTriggerHigh + 1
-            elif self.__bool_high_RH == False and self.__bool_high_T:
+            elif self.__bool_high_RH == False and self.__bool_high_T and self.__temperature is not None:
                 if self.__temperature > self.__threshold_high_temperature:
                     self.__ActTriggerHigh = self.__ActTriggerHigh + 1
                     
             vBoolLow = False
-            if self.__bool_low_RH and self.__bool_low_T:
+            if self.__bool_low_RH and self.__bool_low_T and self.__temperature is not None and self.__humidity is not None:
                 if self.__temperature < self.__threshold_low_temperature and self.__humidity < self.__threshold_low_humidity:
                     self.__ActTriggerLow = self.__ActTriggerLow + 1
-            elif self.__bool_low_RH and self.__bool_low_T == False:
+            elif self.__bool_low_RH and self.__bool_low_T == False and self.__humidity is not None:
                 if self.__humidity < self.__threshold_low_humidity:
                     self.__ActTriggerLow = self.__ActTriggerLow + 1
-            elif self.__bool_low_RH == False and self.__bool_low_T:
+            elif self.__bool_low_RH == False and self.__bool_low_T and self.__temperature is not None:
                 if self.__temperature < self.__threshold_low_temperature:
                     self.__ActTriggerLow = self.__ActTriggerLow + 1
+
+            if self.__ActTriggerHigh == 0 and self.__ActTriggerLow == 0:
+                self.__StateThreshold = 'g'
+            elif self.__ActTriggerHigh <= self.__trigger_count or self.__ActTriggerLow <= self.__trigger_count:
+                self.__StateThreshold = 'y'
+            else:
+                self.__StateThreshold = 'r'
             
             if self.__ActTriggerHigh > self.__trigger_count:
                 vBoolHigh = True
                 self.__ActTriggerHigh = 0
-            elif self.__ActTriggerLow > self.__trigger_count:
+            
+            if self.__ActTriggerLow > self.__trigger_count:
                 vBoolLow = True
                 self.__ActTriggerLow = 0
 
@@ -349,7 +377,7 @@ class tx35dth(object):
                 self.__message += str(self.__humidity)
                 self.__message += '%'
                 
-            #print str(self.__name) + ' High:' + str(self.__ActTriggerHigh) + ' Low:' + str(self.__ActTriggerLow) + ' result: ' + str(result)
+            # print str(self.__name) + ' High:' + str(self.__ActTriggerHigh) + ' Low:' + str(self.__ActTriggerLow) + ' result: ' + str(result)
             return result
 
         def GetInfo(self, csv=True, lacrosse=False):
@@ -358,33 +386,34 @@ class tx35dth(object):
                 if lacrosse:
                     vSensor = {}
                     vSensor['Sensor'] = self.__name
-                    vSensor['Time']   = self.__time
-                    vSensor['RH']     = self.__humidity
-                    vSensor['ID']     = self.__hexCode
-                    vSensor['T']      = self.__temperature
+                    vSensor['Time'] = self.__time
+                    vSensor['RH'] = self.__humidity
+                    vSensor['ID'] = self.__hexCode
+                    vSensor['T'] = self.__temperature
                     if self.__bme280:
                         vSensor['HPA'] = self.__pressure
 
                     result = vSensor
                 else:
-                    result = str(self.__name)+';'
-                    result = result + str(self.__time)[11:16]+';'
-                    result = result + str(self.__temperature)+';'
-                    result = result + str(self.__humidity)+';'
+                    result = str(self.__name) + ';'
+                    result = result + str(self.__time)[11:16] + ';'
+                    result = result + str(self.__temperature) + ';'
+                    result = result + str(self.__humidity) + ';'
                     if self.__bme280:
-                        result = result + str(self.__pressure)+';'
+                        result = result + str(self.__pressure) + ';'
             else:
-                result = str(self.__name)+': '
-                result = result + str(self.__temperature)+'C; '
-                result = result + str(self.__temperature_avg)+'C; '
-                result = result + str(self.__humidity)+'%; '
-                result = result + str(self.__humidity_avg)+'%; '
-                result = result + str(self.__temperature_avg)+'C; '
-
-                if self.__bme280:
-                    result = result + str(self.__pressure)+'hPa; '
+                result = str(self.__name) + ': '
+                result += str(self.__temperature) + 'C; '
+            if self.__temperature_avg is not None:
+                result += str(round(float(self.__temperature_avg), 2)) + 'Cavg; '
+                if self.__humidity is not None:
+                    result += str(self.__humidity) + '%; '
+                    result += str(round(float(self.__humidity_avg), 2)) + ' %avg; '
                 
-                result = result + '[' +str(self.__time)[11:16]+']'
+                if self.__bme280:
+                    result = result + str(self.__pressure) + 'hPa; '
+                
+                result = result + '[' + str(self.__time)[11:16] + ']'
                
             return result
         
@@ -393,7 +422,7 @@ class tx35dth(object):
             if self.__bme280:
                 result += str(self.__name) + ' [bme280]:\n'
             else:
-                result += str(self.__name) + ' ['       + str(self.__hexCode) + ']:\n'
+                result += str(self.__name) + ' [' + str(self.__hexCode) + ']:\n'
 
                 # DELTA
                 if self.__bool_delta_T:
@@ -405,10 +434,10 @@ class tx35dth(object):
                     result += ' self.__delta_humidity: ' + str(self.__delta_humidity) + '\n'
                 else:
                     result += ' self.__delta_humidity: ' + str(self.__bool_delta_RH) + '\n'
-                result += ' self.__delta_message: '     + str(self.__delta_message) + '\n'
+                result += ' self.__delta_message: ' + str(self.__delta_message) + '\n'
                 result += ' self.__delta_message_org: ' + str(self.__delta_message_org) + '\n'                    
                     
-                #Threshold
+                # Threshold
                 if self.__bool_low_T:
                     result += ' self.__threshold_low_temperature: ' + str(self.__threshold_low_temperature) + '\n'
                 else:
@@ -428,8 +457,8 @@ class tx35dth(object):
                     result += ' self.__threshold_high_humidity: ' + str(self.__threshold_high_humidity) + '\n'
                 else:
                     result += ' self.__threshold_high_humidity: ' + str(self.__bool_high_RH) + '\n' 
-                result += ' self.__message: '           + str(self.__message) + '\n'
-                result += ' self.__message_org: '       + str(self.__message_org) + '\n'                           
+                result += ' self.__message: ' + str(self.__message) + '\n'
+                result += ' self.__message_org: ' + str(self.__message_org) + '\n'                           
                 
                 result += ' self.__trigger_count: ' + str(self.__trigger_count) + '\n'
                 result += ' self.__ActTriggerLow: ' + str(self.__ActTriggerLow) + '\n'
@@ -457,43 +486,45 @@ class tx35dth(object):
                 result += ' self.__humidity_count: ' + str(self.__humidity_count) + '\n'
                 result += ' self.__temperature_avg: ' + str(self.__temperature_avg) + '\n'
                 result += ' self.__humidity_avg: ' + str(self.__humidity_avg) + '\n'
-                #result += ' : ' + str() + '\n'
+                # result += ' : ' + str() + '\n'
                     
             return result
 
         def GetHttpTable(self, bheader=True):
-            result = ''
-            result += '<DIV MARGIN="5"><TABLE BORDER=1>'
+            result = ' '
+            result += '<DIV MARGIN=5><TABLE BORDER=1>'
             if bheader:
                 result += '<TR>'
-                result += '<TD><strong>' + self.__name + '</strong></TD>'
+                result += '<TD width=100><strong>' + self.__name + '</strong></TD>'
                 if self.__temperature <> None:
-                    result += '<TD>T</TD>'
+                    result += '<TD width=60>T</TD>'
                 if self.__humidity <> None:
-                    result += '<TD>RH</TD>'
+                    result += '<TD width=60>RH</TD>'
                 if self.__bme280:            
-                    result += '<TD>pa</TD>'
+                    result += '<TD width=60>pa</TD>'
                 result += '</TR>'
             
             result += '<TR>'
-            result += '<TD>' + str(self.__time)[11:16] + '</TD>'
+            result += '<TD>' + str(self.__time)[11:19] + '</TD>'
             if self.__temperature <> None:
-                result += '<TD>'+ str(self.__temperature)+'C</TD>'
+                result += '<TD>' + str(self.__temperature) + 'C</TD>'
             if self.__humidity <> None:
-                result += '<TD>'+str(self.__humidity)+'%</TD>'
+                result += '<TD>' + str(self.__humidity) + '%</TD>'
             if self.__bme280:            
-                result += '<TD>'+str(self.__pressure)+'</TD>'
+                result += '<TD>' + str(self.__pressure) + '</TD>'
             result += '</TR>' 
             
             result += '<TR>'
             result += '<TD>AVG</TD>'
             if self.__temperature <> None:
-                result += '<TD>'+ str(round(self.__temperature_avg,2))+'C</TD>'
+                result += '<TD>' + str(round(self.__temperature_avg, 2)) + 'C</TD>'
             if self.__humidity <> None:
-                result += '<TD>'+str(round(self.__humidity_avg,2))+'%</TD>'
+                result += '<TD>' + str(round(self.__humidity_avg, 2)) + '%</TD>'
             if self.__bme280:            
                 result += '<TD><BR /></TD>'
             result += '</TR>'
             result += '</TABLE></DIV>'    
               
             return result
+
+# vim: tabstop=8 expandtab shiftwidth=4 softtabstop=4

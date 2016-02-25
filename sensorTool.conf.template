@@ -1,6 +1,7 @@
 [global]
 maxtime = 2355 
 mintime = 0700
+cryptkey = your_Key
 
 [test]
 test_actinterval = 5
@@ -23,12 +24,14 @@ trigger_start_count     = 3
 trigger_end_count       = 15
 
 [Sensor0]
-name                    = Keller
+name                    = Zimmer0
 bme280                  = True 
 #delta_humidity         = 0.3
 #delta_temperature      = 0.1
-#delta_Message          = Keller: Starke Veraenderung
-threshold_high_humidity = 58
+#delta_Message          = Zimmer0: Starke Veraenderung
+#threshold_high_humidity = 58
+threshold_low_temperature = 19
+message                   = Zimmer0 unter Grenzwert!
 #trigger_count          = 2
 #trigger_start          = 3
 #trigger_end            = 15
@@ -36,15 +39,15 @@ threshold_high_humidity = 58
 mobile1                 = 4917x12345678
 
 [Sensor1]
-name                      = Bad
+name                      = Zimmer1
 hex                       = b8
 #threshold_low_humidity   = 63
 threshold_low_temperature = 16.9
 delta_humidity            = -6
 #delta_temperature        = 0.1
-delta_Message             = Bad: Starke Veraenderung
+delta_Message             = Zimmer1: Starke Veraenderung
 trigger_count             = 8
-message                   = Bad Fenster zumachen!
+message                   = Zimmer1 Fenster zumachen!
 #httpdport		  = 12341
 mobile1                   = 4917x12345678
 mobile2                   = 4917x12345678
@@ -58,6 +61,8 @@ threshold_low_temperature = 17
 #delta_humidity           = 2
 #delta_message            = WC: Starke Veraenderung
 message                   = WC unter 17
+control_radiator        = true
+fritzactor              = 0876100#####
 #httpdport		  = 123422
 mobile1                   = 4917x12345678
 

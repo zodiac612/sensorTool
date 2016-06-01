@@ -1,0 +1,54 @@
+[Switch12]
+protocol = intertechno_switch
+id = 11223344
+unit = 1
+name = Device1
+group = Group1
+
+[Switch13]
+protocol = intertechno_switch
+id = 11223344
+unit = 2
+name = Device2
+group = Group1
+
+[Switch11]
+protocol = intertechno_switch
+id = 11223344
+unit = 0
+name = Device3
+group = Group2
+
+[Switch21]
+protocol = quigg_gt7000
+id = 1
+unit = 0
+name = GT_7000_1
+group = GT_7000
+
+[Switch22]
+protocol = quigg_gt7000
+id = 1
+unit = 1
+name = GT_7000_2
+group = GT_7000
+
+[Switch31]
+protocol = quigg_gt9000
+id = 112233
+unit = 1
+name = GT_9000_1
+group = GT_9000
+
+[Switch32]
+protocol = quigg_gt9000
+id = 112233
+unit = 2
+name = GT_9000_2
+group = GT_9000
+
+[Switch91]
+protocol = fritzactor
+id = 000000000000
+name = fritzactor1
+group = Control

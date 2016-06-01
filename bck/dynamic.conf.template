@@ -1,0 +1,14 @@
+# Change configuration while runtime
+# e.g. deactivate radiators or change thresholds
+[relais]
+relais_active = True
+
+[Sensor0]
+#threshold_low_temperature = 19
+
+[Sensor1]
+#threshold_low_temperature = 28
+
+[Sensor2]
+threshold_high_humidity = 58
+

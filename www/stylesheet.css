@@ -1,0 +1,169 @@
+body {
+	background-color: #CCCCCC;
+/*	border: 1px inset #386ea2;*/
+}
+/* ### Top ### */
+table.topmenu {
+	/*border: 1px solid #000000;*/
+	border: none;
+	width: 100%;
+}
+td.topmenu {
+	border: 1px solid #000000;
+	width: 20%;
+}
+div.topmenu {
+	padding-top: 0.5em;
+	padding-bottom: 0.5em;
+	text-align: center;
+	/*height: 5em;*/
+	font-size: x-large;
+    font-family: arial;
+}
+table.overview {
+	border: none;
+	width: 100%;	
+}
+td.overview {
+	border: 1px solid #000000;
+	width: 49%;	
+    font-size: large;
+    font-family: arial;	
+}
+img.overview {
+	border: 1px solid #000000;
+	width: 100%;
+}
+button.overview {
+	width: 100%;
+	height: 1.5em;
+	font-size: x-large;
+    font-family: arial;	
+}
+table.switch {
+	border: none;
+	width: 100%;
+	background-color: #FFFFFF;	
+}
+
+td.switchlabel {
+	border: 1px solid #000000;
+	width: 25%;
+	padding: 0.5em;
+	font-size: x-large;
+    font-family: arial;
+/*    font-weight: bold;    */
+}
+td.switch {
+	border: 1px solid #000000;
+	width: 75%;
+}
+form.switch {
+	padding:5px;
+}
+button.switch {
+	width: 49%;
+	height: 3em;
+	font-size: x-large;
+    font-family: arial;	
+}
+
+img.chart {
+    width: 99%;
+    border: 1px solid gray;
+    }
+div.fritzactor{
+    margin: 5px;
+}
+table.fritzactor {
+    border: none;
+	width: 100%;	
+}
+td.fritzactor {
+    border: 1px solid #000000;
+	width: 60px;
+    font-size: large;
+    font-family: arial;	
+}
+td.fritzactorlabel {
+    border: 1px solid #000000;
+	width: 100px;
+    font-size: large;
+    font-family: arial;	
+    font-weight: bold;
+}
+div.tx35dth{
+    margin: 5px;
+}
+table.tx35dth {
+    border: none;
+	width: 100%;	
+}
+td.tx35dth {
+    border: 1px solid #000000;
+	width: 60px;
+    font-size: large;
+    font-family: arial;	
+}
+td.tx35dthlabel {
+    border: 1px solid #000000;
+	width: 100px;
+    font-size: large;
+    font-family: arial;
+/*    font-weight: bold;    */
+}
+div.sensor{
+    margin: 5px;
+}
+table.sensor {
+    border: none;
+	width: 100%;	
+}
+td.sensor {
+    border: 1px solid #000000;
+	width: 60px;
+    font-size: large;
+    font-family: arial;	
+}
+td.sensorlabel {
+    border: 1px solid #000000;
+	width: 100px;
+    font-size: large;
+    font-family: arial;	
+/*    font-weight: bold;    */
+}
+div.history{
+    margin: 5px;
+}
+table.history {
+    border: none;
+	width: 100%;	
+}
+td.history {
+    border: 1px solid #000000;
+	width: 200px;
+    font-size: large;
+    font-family: arial;	
+}
+td.historylabel {
+    border: 1px solid #000000;
+	width: 100px;
+    font-size: large;
+    font-family: arial;	
+/*    font-weight: bold;    */
+}
+td.historynr {
+    border: 1px solid #000000;
+	width: 20px;
+    font-size: large;
+    font-family: arial;	
+}
+td.leer{
+    border: none;
+    width: 60px;
+}
+a:link { color: #000000; text-decoration:underline; }
+a:visited { color: #000000; text-decoration:underline; }
+a:focus { color: #000000; text-decoration:underline; }
+a:hover { color: #FFFFFF; text-decoration:underline; background-color: #4BFF8B}
+a:active { color: #0000FF; text-decoration:underline; }

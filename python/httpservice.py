@@ -1,4 +1,5 @@
 #!/usr/bin/python
+# -*- coding: latin-1 -*-
 # originally by https://github.com/tisfablab/inmonitor
 # no adjustments necessary to original file
 
@@ -37,6 +38,8 @@ class Service:
         else:
             # print 'else1'
             # print json.dumps(data)
+            
+            # Needed for get request
             req = conn.recv(1024)  # get the request, 1kB max
             if pure:
                 data = HTTP_REPLY % data

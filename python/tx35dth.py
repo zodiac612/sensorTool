@@ -1,4 +1,5 @@
-from __builtin__ import True
+#!/usr/bin/python
+# -*- coding: latin-1 -*-
 import math
 class tx35dth(object):
         def __init__(self, dictSensor):
@@ -75,6 +76,10 @@ class tx35dth(object):
 #                self.__CompareValuesPresent = false
             self.__StateThreshold = 'g' # y, r
             self.__StateDelta = 'g' # y, r
+            self.__ListTime = list()
+            self.__ListT = list()
+            self.__ListRH = list()
+            self.__ListPa = list()
 
         def __setTemperatureAvg(self, vT):
             if self.__temperature_count is None:
@@ -95,7 +100,8 @@ class tx35dth(object):
                 self.__humidity_avg = ((vCalVal + vRH) / self.__humidity_count)
                 
         def SetSensorData(self, vLine, vTypeBME280=False):
-            # print vLine
+            #print 'SetSensorData'
+            #print vLine
             
             boolGo = False
             if 'ID' in vLine:
@@ -112,8 +118,9 @@ class tx35dth(object):
                         self.__last_T_exists = True
                         self.__last_temperature = self.__temperature
                     self.__temperature = vLine['T']
-                    self.__setTemperatureAvg(vLine['T'])    
-                                        
+                    self.__setTemperatureAvg(vLine['T'])
+                    self.__ListT.append(self.__temperature)     
+                    #print 'ListT: ' + str(self.__ListT)
                 
                 if 'RH' in vLine:
                     if vLine['RH'] > 0:
@@ -124,16 +131,21 @@ class tx35dth(object):
                             self.__last_humidity = self.__humidity
                         self.__humidity = vLine['RH']
                         self.__setHumidityAvg(vLine['RH'])
+                        self.__ListRH.append(self.__humidity)
+                        #print 'ListRH: ' + str(self.__ListRH)
                 
                 if 'Time' in vLine:
                     self.__last_time = self.__time
                     self.__time = vLine['Time']
-                    
+                    self.__ListTime.append(self.__time)
+                    #print 'ListTime: ' + str(self.__ListTime)
+
                 if 'hPa' in vLine:
                     self.__pressure = vLine['hPa']
                     self.__valuePA = True   
                 
                 self.__CalculateAbsoluteHumidity()
+                                
                 return True
             else:
                 return False
@@ -167,7 +179,7 @@ class tx35dth(object):
                     vA = 7.6
                     vB = 240.7
                 
-                vExp1 = (vA + vT) / (vB + vT)
+                #vExp1 = (vA + vT) / (vB + vT)
                 # Saettigungsdampfdruck in hPa                
                 vSDD = vConstX * (10 ** ((vA * vT) / (vB + vT)))
                 # Dampfdruck in hPa
@@ -180,6 +192,18 @@ class tx35dth(object):
                 self.__absolutefeuchte = vAbsoluteFeuchte 
 #            return vAbsoluteFeuchte
         
+        def GetListT(self):
+            return self.__ListT
+
+        def GetListTime(self):
+            return self.__ListTime
+
+        def GetListRH(self):
+            return self.__ListRH
+
+        def GetListPa(self):
+            return self.__ListPa
+       
         def GetHex(self):
             return self.__hexCode
 
@@ -323,8 +347,8 @@ class tx35dth(object):
 
         def GetThreshold(self):
             result = False
-            Tmsg = ''
-            RHmsg = ''
+            #Tmsg = ''
+            #RHmsg = ''
             
             vBoolHigh = False
             if self.__bool_high_RH and self.__bool_high_T and self.__temperature is not None and self.__humidity is not None:
@@ -491,39 +515,58 @@ class tx35dth(object):
             return result
 
         def GetHttpTable(self, bheader=True):
-            result = ' '
-            result += '<DIV MARGIN=5><TABLE BORDER=1>'
+            result = 'echo "'   
+            result += '<DIV class=\\"tx35dth\\"><TABLE class=\\"tx35dth\\">'
             if bheader:
                 result += '<TR>'
-                result += '<TD width=100><strong>' + self.__name + '</strong></TD>'
-                if self.__temperature <> None:
-                    result += '<TD width=60>T</TD>'
-                if self.__humidity <> None:
-                    result += '<TD width=60>RH</TD>'
+                result += '<TD class=\\"tx35dthlabel\\"><strong>' + self.__name + '</strong></TD>'
+                if self.__temperature is not None:
+                    result += '<TD class=\\"tx35dth\\">T</TD>'
+                else:
+                    result += '<TD class=\\"leer\\"><BR /></TD>'
+                if self.__humidity is not None:
+                    result += '<TD class=\\"tx35dth\\">RH</TD>'
+                else:
+                    result += '<TD class=\\"leer\\"><BR /></TD>'
                 if self.__bme280:            
-                    result += '<TD width=60>pa</TD>'
+                    result += '<TD class=\\"tx35dth\\">pa</TD>'
+                else:
+                    result += '<TD class=\\"leer\\"><BR /></TD>'
                 result += '</TR>'
             
             result += '<TR>'
-            result += '<TD>' + str(self.__time)[11:19] + '</TD>'
-            if self.__temperature <> None:
-                result += '<TD>' + str(self.__temperature) + 'C</TD>'
-            if self.__humidity <> None:
-                result += '<TD>' + str(self.__humidity) + '%</TD>'
+            result += '<TD class=\\"tx35dth\\">' + str(self.__time)[11:19] + '</TD>'
+            if self.__temperature is not None:
+                result += '<TD class=\\"tx35dth\\">' + str(self.__temperature) + 'C</TD>'
+            else:
+                result += '<TD class=\\"leer\\"><BR /></TD>'                
+            if self.__humidity is not None:
+                result += '<TD class=\\"tx35dth\\">' + str(self.__humidity) + '%</TD>'
+            else:
+                result += '<TD class=\\"leer\\"><BR /></TD>'
             if self.__bme280:            
-                result += '<TD>' + str(self.__pressure) + '</TD>'
+                result += '<TD class=\\"tx35dth\\">' + str(self.__pressure) + '</TD>'
+            else:
+                result += '<TD class=\\"leer\\"><BR /></TD>'
             result += '</TR>' 
             
             result += '<TR>'
-            result += '<TD>AVG</TD>'
-            if self.__temperature <> None:
-                result += '<TD>' + str(round(self.__temperature_avg, 2)) + 'C</TD>'
-            if self.__humidity <> None:
-                result += '<TD>' + str(round(self.__humidity_avg, 2)) + '%</TD>'
+            result += '<TD class=\\"tx35dth\\">AVG</TD>'
+            if self.__temperature is not None:
+                result += '<TD class=\\"tx35dth\\">' + str(round(self.__temperature_avg, 2)) + 'C</TD>'
+            else:
+                result += '<TD class=\\"leer\\"><BR /></TD>'                
+            if self.__humidity is not None:
+                result += '<TD class=\\"tx35dth\\">' + str(round(self.__humidity_avg, 2)) + '%</TD>'
+            else:
+                result += '<TD class=\\"leer\\"><BR /></TD>'                
             if self.__bme280:            
-                result += '<TD><BR /></TD>'
+                result += '<TD class=\\"tx35dth\\"><BR /></TD>'
+            else:
+                result += '<TD class=\\"leer\\"><BR /></TD>'
             result += '</TR>'
-            result += '</TABLE></DIV>'    
+            result += '</TABLE></DIV>' 
+            result += '\\n";\n' 
               
             return result
 

@@ -1,8 +1,15 @@
-import time, datetime  # time functions
+#!/usr/bin/python
+# -*- coding: latin-1 -*-
+import datetime  # time functions
+import thread 
+from sensorThreads import threadCreatePHPFile
+
 class sensorHistory(object):
-        def __init__(self):
+        def __init__(self, sPathToExport1='',   sPathToExport2=''):
             self.__dictLog = {}
             self.__counterLog = 0
+            self.__sPathToExport2 = sPathToExport2
+            self.__sPathToExport1 = sPathToExport1
 
         def Add(self, vLine):
             # print vLine
@@ -12,21 +19,47 @@ class sensorHistory(object):
             dictLine['time'] = vNow
             dictLine['text'] = vLine
             self.__dictLog[self.__counterLog] = dictLine
+            if self.__sPathToExport1 <> '':
+                try:  
+                    thread.start_new_thread(threadCreatePHPFile, (self.__sPathToExport1, self.GetHttpLastMessage(),))
+                except:
+                    pass
+            
+            if self.__sPathToExport2 <> '':
+                try:  
+                    thread.start_new_thread(threadCreatePHPFile, (self.__sPathToExport2,  self.GetHttpTable(),))
+                except:
+                    pass
                    
-        def GetHttpTable(self, bheader=True):
-            result = '<DIV MARGIN=5><TABLE BORDER=1><TR>'
-            result += '<TD width=20><BR /></TD>'
-            result += '<TD width=100><strong>History</strong></TD>'
-            result += '<TD width=200><BR /></TD>'
+        def GetHttpTable(self):
+            result = 'echo "'
+            result += '<DIV class=\\"history\\"><TABLE class=\\"history\\"><TR>'
+            result += '<TD class=\\"historynr\\"><BR /></TD>'
+            result += '<TD class=\\"historylabel\\"><strong>History</strong></TD>'
+            result += '<TD class=\\"history\\"><BR /></TD>'
             result += '</TR>'
             for vKey in self.__dictLog:
                 result += '<TR>'
-                result += '<TD>' + str(vKey) + '</TD>'
-                result += '<TD>' + str(self.__dictLog[vKey]['time']) + '</TD>'
-                result += '<TD>' + str(self.__dictLog[vKey]['text']) + '</TD>'
+                result += '<TD class=\\"historynr\\">' + str(vKey) + '</TD>'
+                result += '<TD class=\\"historylabel\\">' + str(self.__dictLog[vKey]['time']) + '</TD>'
+                result += '<TD class=\\"history\\">' + str(self.__dictLog[vKey]['text']) + '</TD>'
                 result += '</TR>'
-          
             result += '</TABLE></DIV>' 
+            result += '\\n";\n'
+            return result
+        
+        def GetHttpLastMessage(self):
+            result = 'echo "'
+            result += '<DIV class=\\"history\\"><TABLE class=\\"history\\"><TR>'
+            result += '<TD class=\\"historynr\\"><BR /></TD>'
+            result += '<TD class=\\"historylabel\\"><strong>History</strong></TD>'
+            result += '<TD class=\\"history\\"><BR /></TD>'
+            result += '</TR><TR>'
+            result += '<TD class=\\"historynr\\">' + str(self.__counterLog) + '</TD>'
+            result += '<TD class=\\"historylabel\\">' + str(self.__dictLog[self.__counterLog]['time']) + '</TD>'
+            result += '<TD class=\\"history\\">' + str(self.__dictLog[self.__counterLog]['text']) + '</TD>'
+            result += '</TR></TABLE></DIV>' 
+            result += '\\n";\n'
             return result
 
 # vim: tabstop=8 expandtab shiftwidth=4 softtabstop=4

@@ -1,5 +1,7 @@
-from __builtin__ import True
-import math, os
+#!/usr/bin/python
+# -*- coding: latin-1 -*-
+
+import os
 class fritzActor(object):
         def __init__(self, dictActor):
             self.__id = dictActor['id']
@@ -152,22 +154,24 @@ class fritzActor(object):
             return result
         
         def GetHttpTable(self, bheader=True):
-            result = '<DIV MARGIN=5><TABLE BORDER=1><TR>'
-            result += '<TD width=100><strong>' + str(self.__name) + '</strong></TD>'
-            result += '<TD width=60>state</TD>'
-            result += '<TD width=60>T</TD>'
-            result += '<TD width=60>W</TD>'
+            result = 'echo "'
+            result += '<DIV class=\\"fritzactor\\"><TABLE class=\\"fritzactor\\"><TR>'
+            result += '<TD class=\\"fritzactorlabel\\"><strong>' + str(self.__name) + '</strong></TD>'
+            result += '<TD class=\\"fritzactor\\">state</TD>'
+            result += '<TD class=\\"fritzactor\\">T</TD>'
+            result += '<TD class=\\"fritzactor\\">W</TD>'
             result += '</TR><TR>'
-            result += '<TD>' + str(self.__time)[11:19] + '</TD>'
-            result += '<TD>' + str(self.__state) + '</TD>'
-            result += '<TD>' + str(self.__temperature) + '</TD>'
-            result += '<TD>' + str(self.GetPower()) + '</TD>'
+            result += '<TD class=\\"fritzactor\\">' + str(self.__time)[11:19] + '</TD>'
+            result += '<TD class=\\"fritzactor\\">' + str(self.__state) + '</TD>'
+            result += '<TD class=\\"fritzactor\\">' + str(self.__temperature) + '</TD>'
+            result += '<TD class=\\"fritzactor\\">' + str(self.GetPower()) + '</TD>'
             result += '</TR><TR>'
-            result += '<TD>avg</TD>'
-            result += '<TD><BR /></TD>'
-            result += '<TD>' + str(self.GetTAvg()) + '</TD>'
-            result += '<TD>' + str(self.GetPowerAvg()) + '</TD>'
-            result += '</TR></TABLE></DIV>' 
+            result += '<TD class=\\"fritzactor\\">avg</TD>'
+            result += '<TD class=\\"leer\\"><BR /></TD>'
+            result += '<TD class=\\"fritzactor\\">' + str(self.GetTAvg()) + '</TD>'
+            result += '<TD class=\\"fritzactor\\">' + str(self.GetPowerAvg()) + '</TD>'
+            result += '</TR></TABLE></DIV>'
+            result += '\\n";\n'
             return result
 
 # vim: tabstop=8 expandtab shiftwidth=4 softtabstop=4

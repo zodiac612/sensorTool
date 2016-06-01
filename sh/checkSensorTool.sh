@@ -1,6 +1,6 @@
 #!/bin/sh
 
-PIDLA=`ps -ef | grep sensorHttpService.py | awk '$0!~/grep/ && $2~/[0-9]/{print $2}'`;
+PIDLA=`ps -ef | grep sensorService.py | awk '$0!~/grep/ && $2~/[0-9]/{print $2}'`;
 PIDIN=`ps -ef | grep sensorLogic.py | awk '$0!~/grep/ && $2~/[0-9]/{print $2}'`;
 
 if [ -z "$PIDIN" ] ; then

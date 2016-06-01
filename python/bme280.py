@@ -3,7 +3,6 @@
 # no adjustments necessary to original file
 
 import smbus
-import time
 
 bus_number  = 1
 i2c_address = 0x77

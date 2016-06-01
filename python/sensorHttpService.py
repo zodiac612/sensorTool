@@ -4,17 +4,14 @@
 from   rfm69 import Rfm69
 import rfm69
 import bme280
-import sensors
 from   sensors import rawsensor
 import time, datetime  # time functions
 import ast
 import ConfigParser
-import io, sys, ast
-import base64
+import sys
 from sensorCrypt import sensorCrypt
 
 # HTTP Service Einstellungen
-import requests  # library for sending data over http
 import socket  # to find out our local ip
 import httpservice  # for rt service
 
@@ -25,9 +22,6 @@ config.read('/home/pi/sensorTool/sensorTool.conf')
 sCrypt = sensorCrypt(config.get('global', 'cryptkey'))
 httpdport = config.getint('lacrosse', 'httpdport')
 # print httpdport
-SERVER = config.get('db', 'server')
-PASSWORD = config.get('db', 'password')
-HTTP_TIMEOUT = config.getint('db', 'http_timeout')
 vVerbose = str(sys.argv[1])
 
 # Sensorspeicher
@@ -92,7 +86,21 @@ data = []
 
 # Werte empfangene Daten bis MAXTIME aus
 # while time.strftime('%H%M') < MAXTIME:
+refreshTime = time.time() + 10
+boolTX35 = False
 while 1:
+    if time.time() > refreshTime:
+        if boolTX35:
+            print 'TX35'
+            rfm.SetParams(Datarate = 9.579), #17.241, #kbit/s baudrate
+	    refreshTime = time.time() + 10
+	    boolTX35 = False
+	else:
+	    print 'TX29'
+	    rfm.SetParams(Datarate = 17.241) #9.579, #17.241, #kbit/s baudrate
+	    refreshTime = time.time() + 10
+	    boolTX35 = True
+    
     data = rfm.ReceivePacket(7)
     obj = rawsensor.CreateSensor(data)
     vNow = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')

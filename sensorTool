@@ -9,13 +9,15 @@
 ### END INIT INFO
 
 MYPATH="/home/pi/sensorTool/python"
-LOGFILE="/var/sensorTool/sensorService.log"
-SCRIPT1="sensorHttpService.py"
+LOGFILE1="/var/sensorTool/sensorService.log"
+LOGFILE2="/var/sensorTool/sensorLogic.log"
+SCRIPT1="sensorService.py"
 SCRIPT2="sensorLogic.py"
 SCRIPT3="/home/pi/sensorTool/sh/checkSensorTool.sh"
 #SCRIPT3="checkInMon.py"
 
-WIFIRECONNECT="/home/pi/sensorTool/wifi-reconnect.sh"
+#WIFIRECONNECT="/home/pi/sensorTool/wifi-reconnect.sh"
+WIFIRECONNECT=""
 
 case "$1" in 
     start)
@@ -27,14 +29,22 @@ case "$1" in
 	fi
 	echo "Timeservice force update"
 	service ntp stop
-	ntpd -qg #-x -n
+	ntpd -q -g -x -n
 	service ntp start
-	sleep 30
+	sleep 20
+	echo "preparing www"
+	mkdir /var/sensorTool/www
+	cp /home/pi/sensorTool/www/* /var/sensorTool/www/
+	chown -R pi.pi /var/sensorTool/www
+	sleep 2
+	service apache2 restart
+
 	echo "Starting sensorTool"
 #	$MYPATH/$SCRIPT1 start >/dev/null 2>&1 &
-	echo '' > $LOGFILE
-	$MYPATH/$SCRIPT1 start >/dev/null 2>&1 &
-	$MYPATH/$SCRIPT2 start >>$LOGFILE 2>&1 &
+	echo '' > $LOGFILE1
+	echo '' > $LOGFILE2
+	$MYPATH/$SCRIPT1 start >>$LOGFILE1 2>&1 &
+	$MYPATH/$SCRIPT2 start >>$LOGFILE2 2>&1 &
 #	$MYPATH/$SCRIPT3 start >/dev/null 2>&1 &
         ;;
     test)

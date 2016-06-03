@@ -1,0 +1,5 @@
+[running]
+volume = 0
+stream = http://stream.radio8.de:8000/live
+action = start
+changed = True

@@ -76,6 +76,6 @@ def sensorSwitches(PathToConfig='/home/pi/sensorTool/switches.conf', vVerbose='s
     #print vhttpResult
     threadCreatePHPFile('/var/sensorTool/www/preswitch.php', vhttpResult) 
 
-sensorSwitches()
+#sensorSwitches()
  
 # vim: tabstop=8 expandtab shiftwidth=4 softtabstop=4

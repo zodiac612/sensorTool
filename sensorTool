@@ -14,6 +14,7 @@ LOGFILE2="/var/sensorTool/sensorLogic.log"
 SCRIPT1="sensorService.py"
 SCRIPT2="sensorLogic.py"
 SCRIPT3="/home/pi/sensorTool/sh/checkSensorTool.sh"
+SCRIPT4="/home/pi/webradio/webradio.py"
 #SCRIPT3="checkInMon.py"
 
 #WIFIRECONNECT="/home/pi/sensorTool/wifi-reconnect.sh"
@@ -36,6 +37,8 @@ case "$1" in
 	mkdir /var/sensorTool/www
 	cp /home/pi/sensorTool/www/* /var/sensorTool/www/
 	chown -R pi.pi /var/sensorTool/www
+	chmod 666 /var/sensorTool/www/dynamic.conf
+	chmod 666 /var/sensorTool/www/webradio.station
 	sleep 2
 	service apache2 restart
 
@@ -46,6 +49,12 @@ case "$1" in
 	$MYPATH/$SCRIPT1 start >>$LOGFILE1 2>&1 &
 	$MYPATH/$SCRIPT2 start >>$LOGFILE2 2>&1 &
 #	$MYPATH/$SCRIPT3 start >/dev/null 2>&1 &
+	echo "Start Webradio"
+	python $SCRIPT4 >/dev/null 2>&1 &
+#	/home/pi/sensorTool/sh/webradio.sh IHN0YXJ0IGh0dHA6Ly9zdHJlYW0ucmFkaW84LmRlOjgwMDAvbGl2ZSAy
+	echo "Stop pilight service" #only needed for switching, when necessery
+	sleep 10
+	service pilight stop
         ;;
     test)
 	$MYPATH/$SCRIPT1 test >/dev/null 2>&1 &

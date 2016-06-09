@@ -16,19 +16,27 @@ include 'top_menue.php';
 echo "<h3>Raspberry PI SensorTool Status<BR />". date("d.m.Y",time())."</h3>\n";
 echo "<BR />\n";
 
-echo "<table><TR><TD>\n";
-echo "<img class=\"chart \" alt=\"Line chart\" src=\"Bad.png\" />\n";
-echo "</TD><TD>\n";
-echo "<img class=\"chart \" alt=\"Line chart\" src=\"EG.png\" />\n";
-echo "</TD></TR><TR><TD>\n";
-echo "<img class=\"chart \" alt=\"Line chart\" src=\"Aussen.png\" />\n";
-echo "</TD><TD>\n";
-echo "<img class=\"chart \"alt=\"Line chart\" src=\"Hasen.png\" />\n";
-echo "</TD></TR><TR><TD>\n";
-echo "<img class=\"chart \" alt=\"Line chart\" src=\"Keller.png\" />\n";
-echo "</TD><TD>\n";
-echo "<img class=\"chart \"alt=\"Line chart\" src=\"WC.png\" />\n";
-echo "</TD></TR></table>\n";
+echo "<table class=\"chart\"><TR>\n";
+$iCount = 0;
+if ($handle = opendir('.')) {
+    while (false !== ($entry = readdir($handle))) {
+        if ($entry != "." && $entry != "..") {
+            if(substr($entry, -4) == ".png") {
+                echo "<TD class=\"chart\">".$entry."<br />\n";
+                echo "<img class=\"chart\" alt=".$entry." src=".$entry." />\n";
+                echo "</TD>\n";
+                $iCount =  $iCount + 1;
+                if ($iCount == 2 ) {
+                    echo "</TR><TR>\n";
+                    $iCount = 0;
+                }
+            }
+            //echo "$entry\n";
+        }
+    }
+    closedir($handle);
+}
+echo "</TR></table>\n";
 
 echo "</body>\n";
 ?>

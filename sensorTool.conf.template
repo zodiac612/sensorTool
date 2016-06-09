@@ -91,3 +91,13 @@ httpdport           = 12330
 [check]
 interval	    = 300
 checkScript         = /home/pi/checkInMon.sh
+
+#BCM Board
+[gpiopins]
+RelayIN1 = 19
+RelayIN2 = 13
+LedGreen = 20
+LedYellow = 21
+LedRed = 16
+motion = 27
+light = 26

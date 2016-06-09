@@ -111,7 +111,36 @@ class sensorConfig(object):
         self.__motion = config.getint('gpiopins', 'motion')
         self.__light = config.getint('gpiopins', 'light')
         
+        self.__modules_webradio = config.getboolean('modules', 'modules_webradio')
+        self.__modules_surveillance = config.getboolean('modules', 'modules_surveillance')
+        self.__modules_radiators = config.getboolean('modules', 'modules_radiators')
+        self.__modules_relais = config.getboolean('modules', 'modules_relais')
+        self.__modules_fritzactors = config.getboolean('modules', 'modules_fritzactors')
+        self.__modules_LANDevices = config.getboolean('modules', 'modules_LANDevices')
+        self.__modules_motiondetector = config.getboolean('modules','modules_motiondetector')
+        
         print('sensorService config')
+
+    def getModuleWebradio(self):
+        return self.__modules_webradio
+    
+    def getModuleMotiondetector(self):
+        return self.__modules_motiondetector
+        
+    def getModuleSurveillance(self):
+        return self.__modules_surveillance
+    
+    def getModuleRadiators(self):
+        return self.__modules_radiators
+    
+    def getModuleRelais(self):
+        return self.__modules_relais
+
+    def getModuleFritzActors(self):
+        return self.__modules_fritzactors
+    
+    def getModuleLANDevices(self):
+        return self.__modules_LANDevices
 
     def getHttpdPort (self):
         return self.__httpdport
@@ -172,5 +201,21 @@ class sensorConfig(object):
         
     def getiControlSensor(self):
         return self.__iControlSensor
-                           
+               
+    def SetupDynamicConfig(self,  sPathToConfig = '/var/sensorTool/www/dynamic.conf'):
+        configDyn = ConfigParser.RawConfigParser()
+        configDyn.read(sPathToConfig)
+
+        vSection = 'modules'
+        configDyn.set(vSection,  'modules_webradio', self.__modules_webradio)
+        configDyn.set(vSection,  'modules_surveillance', self.__modules_surveillance)
+        configDyn.set(vSection,  'modules_radiators', self.__modules_radiators)
+        configDyn.set(vSection,  'modules_relais', self.__modules_relais)
+        configDyn.set(vSection,  'modules_fritzactors', self.__modules_fritzactors)
+        configDyn.set(vSection,  'modules_LANDevices', self.__modules_LANDevices)
+        configDyn.set(vSection,  'modules_motiondetector', self.__modules_motiondetector)
+        
+        with open(str(sPathToConfig), 'wb') as configfile:
+            configDyn.write(configfile) 
+            
 # vim: tabstop=8 expandtab shiftwidth=4 softtabstop=4

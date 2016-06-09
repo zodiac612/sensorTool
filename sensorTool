@@ -14,7 +14,7 @@ LOGFILE2="/var/sensorTool/sensorLogic.log"
 SCRIPT1="sensorService.py"
 SCRIPT2="sensorLogic.py"
 SCRIPT3="/home/pi/sensorTool/sh/checkSensorTool.sh"
-SCRIPT4="/home/pi/webradio/webradio.py"
+#SCRIPT4="/home/pi/webradio/webradio.py"
 #SCRIPT3="checkInMon.py"
 
 #WIFIRECONNECT="/home/pi/sensorTool/wifi-reconnect.sh"
@@ -49,8 +49,8 @@ case "$1" in
 	$MYPATH/$SCRIPT1 start >>$LOGFILE1 2>&1 &
 	$MYPATH/$SCRIPT2 start >>$LOGFILE2 2>&1 &
 #	$MYPATH/$SCRIPT3 start >/dev/null 2>&1 &
-	echo "Start Webradio"
-	python $SCRIPT4 >/dev/null 2>&1 &
+#	echo "Start Webradio"
+#	python $SCRIPT4 >/dev/null 2>&1 &
 #	/home/pi/sensorTool/sh/webradio.sh IHN0YXJ0IGh0dHA6Ly9zdHJlYW0ucmFkaW84LmRlOjgwMDAvbGl2ZSAy
 	echo "Stop pilight service" #only needed for switching, when necessery
 	sleep 10
@@ -82,6 +82,7 @@ case "$1" in
 	sleep 1
         killall $SCRIPT3 >/dev/null 2>&1
 	sleep 1
+	killall mplayer
 	/home/pi/RelaisSchalten aus
 	/home/pi/LedSchalten aus
         ;;

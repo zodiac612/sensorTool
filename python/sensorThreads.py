@@ -3,6 +3,7 @@
 import os
 import ast
 import datetime
+import ConfigParser
 from fritzActor import fritzActor
 
 def threadPICAM(qPIC):
@@ -12,6 +13,12 @@ def threadPICAM(qPIC):
     qPIC.task_done()
     qPIC.put(True)
     #print 'threadPICAM ende'
+
+def threadPICAM2(picRes = 'low'):
+    #print 'threadPICAM start'
+    os.system("/home/pi/sensorTool/sh/picam.sh " + picRes)
+    #print 'threadPICAM ende'
+
     
 def threadNetDiscovery(qNDD):
     command = "/home/pi/sensorTool/sh/ScanNetworkDevices.sh"
@@ -37,6 +44,29 @@ def threadNetDiscovery(qNDD):
         qNDD.task_done()
     #if you need more info in logic part than use the dictNDDs dictonary and not the boolDevicePesent boolean
     qNDD.put(boolDevicePresent)
+    #pass
+
+def threadNetDiscovery2():
+    command = "/home/pi/sensorTool/sh/ScanNetworkDevices.sh"
+    dictNDDs = {}
+    handle = os.popen(command)
+    line = " "
+    boolDevicePresent = False
+    while line:
+        line = handle.readline()
+        if len(line) > 0:
+            dictNDD= {}
+            dictNDD = ast.literal_eval(line)
+            if 'IP' in dictNDD:
+                dictNDDs[dictNDD['IP']] = dictNDD
+                if dictNDD['hostname']  == 'Nexus5X.fritz.box' and dictNDD['status'] == 'Up':
+                    #print dictNDD
+                    boolDevicePresent = True
+                if dictNDD['hostname']  == 'Windows-Phone.fritz.box' and dictNDD['status'] == 'Up':
+                    boolDevicePresent = True                    
+    handle.close()
+    #if you need more info in logic part than use the dictNDDs dictonary and not the boolDevicePesent boolean
+    return boolDevicePresent
     #pass
 
 def threadFritzActors(qFA):
@@ -109,17 +139,34 @@ def threadCreatePHPFile(sFileName,  sArg):
     except:
         pass
 
-def threadWebradioService(sPathToConfig = '/var/sensorTool/www/webradio.station'):
-    config = ConfigParser.RawConfigParser()
-    config.read(sPathToConfig)
+def threadWebradioService(sPathToConfig = '/var/sensorTool/www/webradio.station', webradio_active = False, boolStop = False):
+    configRadio = ConfigParser.RawConfigParser()
+    configRadio.read(sPathToConfig)
+    result = None 
+    webradio_changed = False
+    if not boolStop:
+        if configRadio.getboolean('running', 'changed'):
+            sArg = configRadio.get('running',  'action') + ' ' + configRadio.get('running',  'stream')+' '+configRadio.get('running',  'volume')
+            result = 'Action: ' + configRadio.get('running',  'action') + ', Stream: ' + configRadio.get('running',  'stream')+', Volume: '+configRadio.get('running',  'volume')
+            #print sArg
+            os.system("/home/pi/webradio/webradio.sh " + sArg +" &")
+            webradio_changed = True
+            #os.system("echo \""+sArg+"\"")
+            if configRadio.get('running', 'action') == 'start':
+                webradio_active = True
+            else:
+                webradio_active = False
+                
+            configRadio.set('running', 'changed', False)
+            with open(str(sPathToConfig), 'wb') as configRadioFile:
+                configRadio.write(configRadioFile)
+    else:
+        os.system("/home/pi/webradio/webradio.sh stop &")
+        webradio_changed = True
+        webradio_active = False
     
-    if config.getboolean('running', 'changed'):
-        sArg = config.get('running',  'action') + ' ' + config.get('running',  'stream')+' '+config.get('running',  'volume')
-        print sArg
-        os.system("/home/pi/webradio/webradio.sh " + sArg + " &")
-        #os.system("echo \""+sArg+"\"")
-        config.set('running', 'changed', False)
-        with open(str(sPathToConfig), 'wb') as configfile:
-            config.write(configfile) 
+    if not webradio_active:
+        result = None 
+    return (webradio_active, webradio_changed, result)  
 
 # vim: tabstop=8 expandtab shiftwidth=4 softtabstop=4

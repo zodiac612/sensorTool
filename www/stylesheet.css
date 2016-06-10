@@ -125,6 +125,13 @@ td.sensor {
     font-size: large;
     font-family: arial;	
 }
+td.sensorGreen {
+    border: 1px solid #000000;
+	width: 60px;
+    font-size: large;
+    font-family: arial;
+    background-color: #99ff99;	
+}
 td.sensorlabel {
     border: 1px solid #000000;
 	width: 100px;

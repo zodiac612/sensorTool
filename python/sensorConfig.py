@@ -13,17 +13,23 @@ class sensorConfig(object):
             print(config.sections()) 
             
         self.__CryptKey = config.get('global', 'cryptkey')
-        self.__Interval = config.getint('sensors', 'data_save_interval')
         self.__MaxTime = config.get('global', 'maxtime') 
         self.__MinTime = config.get('global', 'mintime') 
-        self.__Interval_A = config.getint('sensors', 'actinterval')
+        self.__Interval_fritzactors = config.getint('fritzactors', 'actinterval')
+        self.__Interval_Sensors = config.getint('sensors', 'actinterval')        
+        self.__webradio_interval = config.getint('webradio', 'actinterval')
+        self.__LANDevices_interval = config.getint('LANDevices', 'actinterval')
+        self.__webradio_intervalmotion = config.getint('webradio', 'motiontimeout')        
         self.__Server = 'localhost'
 
         if vVerbose.startswith('test'):
-            self.__Interval = config.getint('test', 'test_data_save_interval')
+            self.__Interval_Sensors = config.getint('test', 'test_sensors_actinterval')
             self.__MaxTime = config.get('test', 'test_maxtime')
-            self.__Interval_A = config.getint('test', 'test_actinterval')
-    
+            self.__Interval_fritzactors = config.getint('test', 'test_fritzactors_actinterval')
+            self.__webradio_interval = config.getint('test', 'test_webradio_actinterval')
+            self.__LANDevices_interval = config.getint('test', 'test_LANDevices_actinterval')
+            self.__webradio_intervalmotion = config.getint('test', 'test_webradio_motiontimeout') 
+     
         self.__TriggerCountA = config.getint('sensors', 'trigger_start_count')
         self.__TriggerCountB = config.getint('sensors', 'trigger_end_count')
 
@@ -49,46 +55,46 @@ class sensorConfig(object):
             iSensor = 0
             while iSensor < CountOfSensors:
                 dictSensor = {}
-                try:    dictSensor['bme280'] = config.getboolean('Sensor' + str(iSensor), 'bme280')
+                try:    dictSensor['bme280'] = config.getboolean('sensor' + str(iSensor), 'bme280')
                 except: dictSensor['bme280'] = False
-                try:    dictSensor['hex'] = config.get('Sensor' + str(iSensor), 'hex')
+                try:    dictSensor['hex'] = config.get('sensor' + str(iSensor), 'hex')
                 except:
                     if dictSensor['bme280']:
                         dictSensor['hex'] = 'bme280'
                     else:
                         dictSensor['hex'] = 'none'   
                              
-                try:    dictSensor['name'] = config.get('Sensor' + str(iSensor), 'name')
+                try:    dictSensor['name'] = config.get('sensor' + str(iSensor), 'name')
                 except: dictSensor['name'] = 'unkown'
-                try:    dictSensor['message'] = config.get('Sensor' + str(iSensor), 'message')
+                try:    dictSensor['message'] = config.get('sensor' + str(iSensor), 'message')
                 except: dictSensor['message'] = 'no message defined'
-                try:    dictSensor['delta_message'] = config.get('Sensor' + str(iSensor), 'delta_message')
+                try:    dictSensor['delta_message'] = config.get('sensor' + str(iSensor), 'delta_message')
                 except: dictSensor['delta_message'] = 'no delta message defined'
-                try:    dictSensor['delta_humidity'] = config.getfloat('Sensor' + str(iSensor), 'delta_humidity')
+                try:    dictSensor['delta_humidity'] = config.getfloat('sensor' + str(iSensor), 'delta_humidity')
                 except: pass
-                try:    dictSensor['delta_temperature'] = config.getfloat('Sensor' + str(iSensor), 'delta_temperature')
+                try:    dictSensor['delta_temperature'] = config.getfloat('sensor' + str(iSensor), 'delta_temperature')
                 except: pass
-                try:    dictSensor['threshold_low_humidity'] = config.getfloat('Sensor' + str(iSensor), 'threshold_low_humidity')
+                try:    dictSensor['threshold_low_humidity'] = config.getfloat('sensor' + str(iSensor), 'threshold_low_humidity')
                 except: pass
-                try:    dictSensor['threshold_low_temperature'] = config.getfloat('Sensor' + str(iSensor), 'threshold_low_temperature')
+                try:    dictSensor['threshold_low_temperature'] = config.getfloat('sensor' + str(iSensor), 'threshold_low_temperature')
                 except: pass
-                try:    dictSensor['threshold_high_humidity'] = config.getfloat('Sensor' + str(iSensor), 'threshold_high_humidity')
+                try:    dictSensor['threshold_high_humidity'] = config.getfloat('sensor' + str(iSensor), 'threshold_high_humidity')
                 except: pass
-                try:    dictSensor['threshold_high_temperature'] = config.getfloat('Sensor' + str(iSensor), 'threshold_high_temperature')
+                try:    dictSensor['threshold_high_temperature'] = config.getfloat('sensor' + str(iSensor), 'threshold_high_temperature')
                 except: pass
-                try:    dictSensor['trigger_count'] = config.getint('Sensor' + str(iSensor), 'trigger_count')
+                try:    dictSensor['trigger_count'] = config.getint('sensor' + str(iSensor), 'trigger_count')
                 except: dictSensor['trigger_count'] = 0
-                try:    dictSensor['fritzactor'] = config.get('Sensor' + str(iSensor), 'fritzactor')
+                try:    dictSensor['fritzactor'] = config.get('sensor' + str(iSensor), 'fritzactor')
                 except: pass
                 try:
-                    if config.getboolean('Sensor' + str(iSensor), 'control_radiator'):
+                    if config.getboolean('sensor' + str(iSensor), 'control_radiator'):
                         self.__iControlSensor = iSensor
                 except: pass  
                 iMobile = 1
                 dictMobile = {}
                 while iMobile < 100:
                     try:    
-                        dictMobile[iMobile] = config.get('Sensor' + str(iSensor), 'mobile' + str(iMobile))
+                        dictMobile[iMobile] = config.get('sensor' + str(iSensor), 'mobile' + str(iMobile))
                         iMobile = iMobile + 1
                     except: iMobile = 100
                 dictSensor['mobiles'] = dictMobile
@@ -112,6 +118,7 @@ class sensorConfig(object):
         self.__light = config.getint('gpiopins', 'light')
         
         self.__modules_webradio = config.getboolean('modules', 'modules_webradio')
+        self.__modules_webradiomotion = config.getboolean('modules', 'modules_webradiomotion')
         self.__modules_surveillance = config.getboolean('modules', 'modules_surveillance')
         self.__modules_radiators = config.getboolean('modules', 'modules_radiators')
         self.__modules_relais = config.getboolean('modules', 'modules_relais')
@@ -120,6 +127,21 @@ class sensorConfig(object):
         self.__modules_motiondetector = config.getboolean('modules','modules_motiondetector')
         
         print('sensorService config')
+
+    def getIntervalWebradio(self):
+        return self.__webradio_interval
+
+    def getIntervalLANDevices(self):
+        return self.__LANDevices_interval
+
+    def getIntervalWebradiomotion(self):
+        return self.__webradio_intervalmotion
+
+    def getModuleWebradiomotion(self):
+        return self.__modules_webradiomotion
+        
+    def getWebradioTimeOut(self):
+        return self.__webradio_timeout        
 
     def getModuleWebradio(self):
         return self.__modules_webradio
@@ -170,7 +192,7 @@ class sensorConfig(object):
         return self.__CryptKey
     
     def getIntervalSensors(self):
-        return self.__Interval
+        return self.__Interval_Sensors
 
     def getMaxTime(self):
         return self.__MaxTime
@@ -179,7 +201,7 @@ class sensorConfig(object):
         return self.__MinTime 
     
     def getIntervalActors(self):
-        return self.__Interval_A
+        return self.__Interval_fritzactors
 
     def getServer(self):
         return self.__Server
@@ -208,6 +230,7 @@ class sensorConfig(object):
 
         vSection = 'modules'
         configDyn.set(vSection,  'modules_webradio', self.__modules_webradio)
+        configDyn.set(vSection,  'modules_webradiomotion', self.__modules_webradiomotion)
         configDyn.set(vSection,  'modules_surveillance', self.__modules_surveillance)
         configDyn.set(vSection,  'modules_radiators', self.__modules_radiators)
         configDyn.set(vSection,  'modules_relais', self.__modules_relais)

@@ -135,6 +135,7 @@ while 1:
             print 'T1: Sensors Thread'
             for vKey in dictSensors:
                 print 'T1:  ' + str(vKey) + ': ' + str(dictSensors[vKey])
+    time.sleep(0.1)
 
 if vVerbose.startswith('test'):
     print 'script Ende'

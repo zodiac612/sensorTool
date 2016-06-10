@@ -139,12 +139,12 @@ def threadCreatePHPFile(sFileName,  sArg):
     except:
         pass
 
-def threadWebradioService(sPathToConfig = '/var/sensorTool/www/webradio.station', webradio_active = False, boolStop = False):
+def threadWebradioService(sPathToConfig = '/var/sensorTool/www/webradio.station', webradio_active = False, boolStop = False,  boolStart = False):
     configRadio = ConfigParser.RawConfigParser()
     configRadio.read(sPathToConfig)
     result = None 
     webradio_changed = False
-    if not boolStop:
+    if not boolStop and not boolStart:
         if configRadio.getboolean('running', 'changed'):
             sArg = configRadio.get('running',  'action') + ' ' + configRadio.get('running',  'stream')+' '+configRadio.get('running',  'volume')
             result = 'Action: ' + configRadio.get('running',  'action') + ', Stream: ' + configRadio.get('running',  'stream')+', Volume: '+configRadio.get('running',  'volume')
@@ -160,13 +160,17 @@ def threadWebradioService(sPathToConfig = '/var/sensorTool/www/webradio.station'
             configRadio.set('running', 'changed', False)
             with open(str(sPathToConfig), 'wb') as configRadioFile:
                 configRadio.write(configRadioFile)
+    elif not boolStop and boolStart:
+        sArg = 'start ' + configRadio.get('running',  'stream')+' '+configRadio.get('running',  'volume')
+        os.system("/home/pi/webradio/webradio.sh " + sArg +" &")
+        webradio_active = True
     else:
         os.system("/home/pi/webradio/webradio.sh stop &")
         webradio_changed = True
         webradio_active = False
     
     if not webradio_active:
-        result = None 
+        result = 'Stopped'
     return (webradio_active, webradio_changed, result)  
 
 # vim: tabstop=8 expandtab shiftwidth=4 softtabstop=4

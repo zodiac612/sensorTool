@@ -80,6 +80,7 @@ class tx35dth(object):
             self.__ListT = list()
             self.__ListRH = list()
             self.__ListPa = list()
+            self.__ListAH = list()
 
         def __setTemperatureAvg(self, vT):
             if self.__temperature_count is None:
@@ -132,6 +133,8 @@ class tx35dth(object):
                         self.__humidity = vLine['RH']
                         self.__setHumidityAvg(vLine['RH'])
                         self.__ListRH.append(self.__humidity)
+                        self.__CalculateAbsoluteHumidity()
+                        self.__ListAH.append(self.__absolutefeuchte)
                         #print 'ListRH: ' + str(self.__ListRH)
                 
                 if 'Time' in vLine:
@@ -143,8 +146,6 @@ class tx35dth(object):
                 if 'hPa' in vLine:
                     self.__pressure = vLine['hPa']
                     self.__valuePA = True   
-                
-                self.__CalculateAbsoluteHumidity()
                                 
                 return True
             else:
@@ -189,7 +190,7 @@ class tx35dth(object):
                 vTauPunkt = (vB * vV) / (vA - vV)
                 self.__taupunkt = vTauPunkt
                 vAbsoluteFeuchte = (10 ** 5) * (vMw / vRStar) * (vDD / vTK)
-                self.__absolutefeuchte = vAbsoluteFeuchte 
+                self.__absolutefeuchte = str(round(float(vAbsoluteFeuchte), 2)) 
 #            return vAbsoluteFeuchte
         
         def GetListT(self):
@@ -200,6 +201,9 @@ class tx35dth(object):
 
         def GetListRH(self):
             return self.__ListRH
+            
+        def GetListAH(self):
+            return self.__ListAH            
 
         def GetListPa(self):
             return self.__ListPa
@@ -215,6 +219,9 @@ class tx35dth(object):
         
         def GetRH(self):
             return self.__humidity
+            
+        def GetAH(self):
+            return self.__absolutefeuchte
         
         def GetPA(self):
             return self.__pressure
@@ -526,7 +533,9 @@ class tx35dth(object):
                     result += '<TD class=\\"leer\\"><BR /></TD>'
                 if self.__humidity is not None:
                     result += '<TD class=\\"tx35dth\\">RH</TD>'
+                    result += '<TD class=\\"tx35dth\\">AH</TD>'
                 else:
+                    result += '<TD class=\\"leer\\"><BR /></TD>'
                     result += '<TD class=\\"leer\\"><BR /></TD>'
                 if self.__bme280:            
                     result += '<TD class=\\"tx35dth\\">pa</TD>'
@@ -542,7 +551,9 @@ class tx35dth(object):
                 result += '<TD class=\\"leer\\"><BR /></TD>'                
             if self.__humidity is not None:
                 result += '<TD class=\\"tx35dth\\">' + str(self.__humidity) + '%</TD>'
+                result += '<TD class=\\"tx35dth\\">' + str(self.__absolutefeuchte) + '#</TD>'
             else:
+                result += '<TD class=\\"leer\\"><BR /></TD>'
                 result += '<TD class=\\"leer\\"><BR /></TD>'
             if self.__bme280:            
                 result += '<TD class=\\"tx35dth\\">' + str(self.__pressure) + '</TD>'
@@ -558,8 +569,10 @@ class tx35dth(object):
                 result += '<TD class=\\"leer\\"><BR /></TD>'                
             if self.__humidity is not None:
                 result += '<TD class=\\"tx35dth\\">' + str(round(self.__humidity_avg, 2)) + '%</TD>'
+                result += '<TD class=\\"leer\\"><BR /></TD>'
             else:
                 result += '<TD class=\\"leer\\"><BR /></TD>'                
+                result += '<TD class=\\"leer\\"><BR /></TD>'
             if self.__bme280:            
                 result += '<TD class=\\"tx35dth\\"><BR /></TD>'
             else:

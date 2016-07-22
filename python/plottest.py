@@ -19,8 +19,10 @@ def plotting(dictPlotSen, dictPlotAussen, vVerbose):
             vZeit = list()
             vTemp1 = list()
             vRH1 = list()
+            vAH1 = list()
             vTemp1 = dictPlotSen[vKey]['ListT']
             vRH1 = dictPlotSen[vKey]['ListRH']
+            vAH1 = dictPlotSen[vKey]['ListAH']
 
             for vE in dictPlotSen[vKey]['ListTime']:
 #                print str(vE[11:16]).replace(':', '.')
@@ -70,7 +72,11 @@ def plotting(dictPlotSen, dictPlotAussen, vVerbose):
                     vLabel2 = sName + '_RH (' + str(vRH1[-1]) + ')'
                     plt.plot(vZeit, vRH1, marker='', linestyle='-', color='c', label=vLabel2)
                     #plt.plot(vZeit, vRH1, marker='*', linestyle='-.', color='c', label=vLabel2)
-                    
+
+                if len(vAH1) > 0:
+                    vLabel3 = sName + '_AH (' + str(vAH1[-1]) + ')'
+                    plt.plot(vZeit, vAH1, marker='', linestyle='-', color='b', label=vLabel3)                    
+
                 #plt.plot(vZeit, vTemp2, marker='', linestyle='-', color='r', label=vLabel3)
                 #plt.plot(vZeit, vTemp2, marker='o', linestyle='--', color='r', label=vLabel3)
                 

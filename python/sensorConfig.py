@@ -51,6 +51,7 @@ class sensorConfig(object):
 
         self.__dictSensors = {}
         self.__iControlSensor = None
+        self.__iOutdoorSensor = None
         if CountOfSensors > 0:
             iSensor = 0
             while iSensor < CountOfSensors:
@@ -90,6 +91,10 @@ class sensorConfig(object):
                     if config.getboolean('sensor' + str(iSensor), 'control_radiator'):
                         self.__iControlSensor = iSensor
                 except: pass  
+                try:
+                    if config.getboolean('sensor' + str(iSensor),  'outdoor'):
+                        self.__iOutdoorSensor = iSensor
+                except: pass
                 iMobile = 1
                 dictMobile = {}
                 while iMobile < 100:
@@ -223,6 +228,9 @@ class sensorConfig(object):
         
     def getiControlSensor(self):
         return self.__iControlSensor
+
+    def getiOutdoorSensor(self):
+        return self.__iOutdoorSensor
                
     def SetupDynamicConfig(self,  sPathToConfig = '/var/sensorTool/www/dynamic.conf'):
         configDyn = ConfigParser.RawConfigParser()

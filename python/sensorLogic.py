@@ -69,6 +69,10 @@ dictActors = {}
 dictSensors = {}
 dictSensors = sConfig.getDictSensors()
 iControlSensor = sConfig.getiControlSensor()
+iOutdoorSensor = sConfig.getiOutdoorSensor()
+boolOutdoorSensor = False
+if iOutdoorSensor is not None:
+   boolOutdoorSensor = True
 sH_Log = sensorHistory('/var/sensorTool/www/loglatestentry.php', '/var/sensorTool/www/logdata.php')
 iLog = 0
 
@@ -168,18 +172,10 @@ def getHTML():
     vhttpResult += 'echo "</TD>\\n";\n'
     vhttpResult += 'echo "<TD>\\n";\n'
  
-    if modules_radiators:
-        vhttpResult += DeviceRadiator.GetHttpTable()
-        #vhttpResult += 'echo "<BR \>\\n";\n'
-    if modules_motiondetector:
-        vhttpResult += DeviceMotion.GetHttpTable()
-        #vhttpResult += 'echo "<BR \>\\n";\n'
-    if modules_webradio:
-        vhttpResult += DeviceWebradio.GetHttpTable()
-        #vhttpResult += 'echo "<BR \>\\n";\n'
-    if modules_LANDevices:
-        vhttpResult += DeviceNetworkDetector.GetHttpTable()
-        #vhttpResult += 'echo "<BR \>\\n";\n'
+    vhttpResult += DeviceRadiator.GetHttpTable()
+    vhttpResult += DeviceMotion.GetHttpTable()
+    vhttpResult += DeviceWebradio.GetHttpTable()
+    vhttpResult += DeviceNetworkDetector.GetHttpTable()
  
     if modules_fritzactors:
         for vAKey in dictActors:
@@ -513,8 +509,13 @@ while time.strftime('%H%M') < MAXTIME:  # timeDuration <= MAXTIME:
 
         if vVerbose.startswith('test1'):
             print( 'Threshold: ' + str(dictSensors[iControlSensor].GetThreshold()) + ' RadiatorStarted: ' + str(RadiatorStarted) + ' vBoolInterval: ' + str(vBoolInterval) +' modules_radiators: ' + str(modules_radiators))
-            
-        if dictSensors[iControlSensor].GetThreshold() and RadiatorStarted == False and vBoolInterval and modules_radiators:
+         
+        boolTriggerOutdoor = True
+        if boolOutdoorSensor:
+            if dictSensors[iControlSensor].GetAH() < dictSensors[iOutdoorSensor].GetAH():
+                boolTriggerOutdoor = False
+      
+        if dictSensors[iControlSensor].GetThreshold() and RadiatorStarted == False and vBoolInterval and modules_radiators and boolTriggerOutdoor:
             counterHigh = counterHigh + 1
             #if LedY.isOn == False:
             #    LedY.on()
@@ -522,7 +523,7 @@ while time.strftime('%H%M') < MAXTIME:  # timeDuration <= MAXTIME:
         else:
             counterHigh = 0
             
-        if dictSensors[iControlSensor].GetThreshold() == False and RadiatorStarted and vBoolInterval and modules_radiators:
+        if dictSensors[iControlSensor].GetThreshold() == False and RadiatorStarted and vBoolInterval and modules_radiators and boolTriggerOutdoor:
             counterLow = counterLow + 1
             #if LedY.isOn == False:
             #    LedY.on()
@@ -570,14 +571,14 @@ while time.strftime('%H%M') < MAXTIME:  # timeDuration <= MAXTIME:
             if boolLeuchte:
                 boolLeuchte = Leuchte.deactivate(boolLeuchte)
                 
-        if counterHigh == TriggerCountA and RadiatorStarted == False and vBoolInterval and modules_radiators:
+        if counterHigh == TriggerCountA and RadiatorStarted == False and vBoolInterval and modules_radiators and boolTriggerOutdoor:
             dictActors[dictSensors[iControlSensor].GetFritzActor()].SetActor(True)
             #LedR.on()
             #LedY.off()
             RadiatorStarted = True
             sendWhatsApps(dictSensors[iControlSensor].GetMobiles(), getInfoText("Started"))
             sH_Log.Add('Radiator activated')
-        elif (counterLow == TriggerCountB or vBoolInterval == False or modules_radiators == False) and RadiatorStarted:
+        elif (counterLow == TriggerCountB or vBoolInterval == False or modules_radiators == False or boolTriggerOutdoor == False) and RadiatorStarted:
             dictActors[dictSensors[iControlSensor].GetFritzActor()].SetActor(False)
             #LedR.off()
             #LedY.off()
@@ -601,6 +602,7 @@ while time.strftime('%H%M') < MAXTIME:  # timeDuration <= MAXTIME:
             dictPlotS['ListTime'] = dictSensors[vKey].GetListTime()
             dictPlotS['ListT'] = dictSensors[vKey].GetListT()
             dictPlotS['ListRH'] = dictSensors[vKey].GetListRH()
+            dictPlotS['ListAH'] = dictSensors[vKey].GetListAH()
             dictPlotSens[sName] = dictPlotS
         
         if modules_webradio:
@@ -609,6 +611,7 @@ while time.strftime('%H%M') < MAXTIME:  # timeDuration <= MAXTIME:
             dictPlotS['ListTime'] = DeviceWebradio.GetListTime()
             dictPlotS['ListT'] = DeviceWebradio.GetListT()
             dictPlotS['ListRH'] = list()
+            dictPlotS['ListAH'] = list()
             dictPlotSens[sName] = dictPlotS
         
         if modules_motiondetector:
@@ -617,6 +620,7 @@ while time.strftime('%H%M') < MAXTIME:  # timeDuration <= MAXTIME:
             dictPlotS['ListTime'] = DeviceMotion.GetListTime()
             dictPlotS['ListT'] = DeviceMotion.GetListT()
             dictPlotS['ListRH'] = list()
+            dictPlotS['ListAH'] = list()
             dictPlotSens[sName] = dictPlotS
 
         if modules_LANDevices:
@@ -625,6 +629,7 @@ while time.strftime('%H%M') < MAXTIME:  # timeDuration <= MAXTIME:
             dictPlotS['ListTime'] = DeviceNetworkDetector.GetListTime()
             dictPlotS['ListT'] = DeviceNetworkDetector.GetListT()
             dictPlotS['ListRH'] = list()
+            dictPlotS['ListAH'] = list()
             dictPlotSens[sName] = dictPlotS
           
         if modules_radiators:
@@ -633,6 +638,7 @@ while time.strftime('%H%M') < MAXTIME:  # timeDuration <= MAXTIME:
             dictPlotS['ListTime'] = DeviceRadiator.GetListTime()
             dictPlotS['ListT'] = DeviceRadiator.GetListT()
             dictPlotS['ListRH'] = list()
+            dictPlotS['ListAH'] = list()
             dictPlotSens[sName] = dictPlotS  
  
         plotting(dictPlotSens, dictPlotAussen, vVerbose)

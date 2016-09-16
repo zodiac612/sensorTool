@@ -96,6 +96,8 @@ modules_fritzactors = sConfig.getModuleFritzActors() # ok
 modules_LANDevices = sConfig.getModuleLANDevices() # ok
 LANDevices_Present = False
 DeviceNetworkDetector=sensorDevice('NetworkDeviceDetector')
+LANNetwork = sConfig.getLANNetwork()
+dictMobileHosts = sConfig.getdictMobileHosts()
 
 sConfig.SetupDynamicConfig('/var/sensorTool/www/dynamic.conf')
 
@@ -265,7 +267,7 @@ while time.strftime('%H%M') < MAXTIME:  # timeDuration <= MAXTIME:
             if not DiscoveryInProgress:
                 if vVerbose.startswith('test1'):
                     print str(time.time())+'while: refreshTime_LANDevices: modules_LANDevices: Start Network Device Discovery!'
-                thread.start_new_thread(threadNetDiscovery,  (qNDD, ) )
+                thread.start_new_thread(threadNetDiscovery,  (qNDD,  LANNetwork,  dictMobileHosts) )
                 DiscoveryInProgress = True
             else:
                 if vVerbose.startswith('test1'):
@@ -371,7 +373,14 @@ while time.strftime('%H%M') < MAXTIME:  # timeDuration <= MAXTIME:
                     refreshTime_webradioMotion = time.time() + webradio_motionTimeOut
                     print refreshTime_webradioMotion
                 else:
-                    webradio_motionActive = False
+                    
+                    # no motion detected, but mobile device present, webradio must be acticve
+                    if modules_LANDevices and LANDevices_Present:
+                        webradio_motionActive = True
+                        refreshTime_webradioMotion = time.time() + webradio_motionTimeOut
+                        print refreshTime_webradioMotion                       
+                    else:
+                        webradio_motionActive = False
             motion_detected_report = False        
             DeviceWebradio.SetSensorData(webradio_active)
             DeviceNetworkDetector.SetSensorData(LANDevices_Present)

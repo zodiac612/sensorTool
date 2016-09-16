@@ -19,6 +19,7 @@ class sensorConfig(object):
         self.__Interval_Sensors = config.getint('sensors', 'actinterval')        
         self.__webradio_interval = config.getint('webradio', 'actinterval')
         self.__LANDevices_interval = config.getint('LANDevices', 'actinterval')
+        self.__LANNetwork = config.get('LANDevices', 'network')        
         self.__webradio_intervalmotion = config.getint('webradio', 'motiontimeout')        
         self.__Server = 'localhost'
 
@@ -45,6 +46,15 @@ class sensorConfig(object):
                 iIntervall = iIntervall + 1
             except: iIntervall = 100
         # print dictIntervalle
+        
+        self.__dictMobileHosts = {}
+        iIntervall = 1
+        while iIntervall < 100:
+            try:
+                self.__dictMobileHosts[iIntervall] = config.get('LANDevices', 'host_' + str(iIntervall))
+                iIntervall = iIntervall + 1
+            except: iIntervall = 100
+        # print self.__dictMobileHosts
         
         self.__vTitel = config.get('sensors', 'titel')
         CountOfSensors = config.getint('sensors', 'count_of_sensors')
@@ -138,6 +148,12 @@ class sensorConfig(object):
 
     def getIntervalLANDevices(self):
         return self.__LANDevices_interval
+    
+    def getLANNetwork(self):
+        return self.__LANNetwork
+
+    def getdictMobileHosts(self):
+        return self.__dictMobileHosts
 
     def getIntervalWebradiomotion(self):
         return self.__webradio_intervalmotion

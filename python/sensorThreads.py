@@ -18,10 +18,9 @@ def threadPICAM2(picRes = 'low'):
     #print 'threadPICAM start'
     os.system("/home/pi/sensorTool/sh/picam.sh " + picRes)
     #print 'threadPICAM ende'
-
     
-def threadNetDiscovery(qNDD):
-    command = "/home/pi/sensorTool/sh/ScanNetworkDevices.sh"
+def threadNetDiscovery(qNDD, strNetwork, dictHosts):
+    command = "/home/pi/sensorTool/sh/ScanNetworkDevices.sh " + strNetwork
     dictNDDs = {}
     handle = os.popen(command)
     line = " "
@@ -29,15 +28,15 @@ def threadNetDiscovery(qNDD):
     while line:
         line = handle.readline()
         if len(line) > 0:
+            #print line
             dictNDD= {}
             dictNDD = ast.literal_eval(line)
             if 'IP' in dictNDD:
                 dictNDDs[dictNDD['IP']] = dictNDD
-                if dictNDD['hostname']  == 'Nexus5X.fritz.box' and dictNDD['status'] == 'Up':
-                    #print dictNDD
-                    boolDevicePresent = True
-                if dictNDD['hostname']  == 'Windows-Phone.fritz.box' and dictNDD['status'] == 'Up':
-                    boolDevicePresent = True                    
+                for iHost in dictHosts:
+                    if dictNDD['hostname']  == dictHosts[iHost] and dictNDD['status'] == 'Up':
+                        #print dictNDD
+                        boolDevicePresent = True                 
     handle.close()
     if not qNDD.empty():
         qNDD.get()
@@ -46,8 +45,8 @@ def threadNetDiscovery(qNDD):
     qNDD.put(boolDevicePresent)
     #pass
 
-def threadNetDiscovery2():
-    command = "/home/pi/sensorTool/sh/ScanNetworkDevices.sh"
+def threadNetDiscovery2(strNetwork, dictHosts):
+    command = "/home/pi/sensorTool/sh/ScanNetworkDevices.sh " + strNetwork
     dictNDDs = {}
     handle = os.popen(command)
     line = " "
@@ -59,11 +58,10 @@ def threadNetDiscovery2():
             dictNDD = ast.literal_eval(line)
             if 'IP' in dictNDD:
                 dictNDDs[dictNDD['IP']] = dictNDD
-                if dictNDD['hostname']  == 'Nexus5X.fritz.box' and dictNDD['status'] == 'Up':
-                    #print dictNDD
-                    boolDevicePresent = True
-                if dictNDD['hostname']  == 'Windows-Phone.fritz.box' and dictNDD['status'] == 'Up':
-                    boolDevicePresent = True                    
+                for strHost in dictHosts:
+                    if dictNDD['hostname']  == strHost and dictNDD['status'] == 'Up':
+                        #print dictNDD
+                        boolDevicePresent = True
     handle.close()
     #if you need more info in logic part than use the dictNDDs dictonary and not the boolDevicePesent boolean
     return boolDevicePresent

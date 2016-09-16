@@ -1,12 +1,27 @@
 # sensorTool
 Checks temperature and humidity and sends messages to mobile phones when reaching defined thresholds.
 
-## TODO
-  - Some Settings are made within the scripts, i want to shift these into the config file.
-  - Within the code are language mixed descriptions (german and english)
-  - The php part is still missing.
-  - other topics
-
+## Actual functionality
+ - Lacrosse Sensors (TX35 & TX29)
+ - BME280 Sensors
+ - fritz dect 200
+ - webradio
+ - LED alarm light
+ - motion detector
+ - Network device detector
+ - picam
+ - 433 MHZ Switches (intertechno/gt-7000/gt-9000)
+ - no whatsapp support because of at the moment unkown problems
+ 
+ Usecases:
+    1) Sensor RoomX Value(Temperature and or Humidity) below threshold => alarm triggerd (LED alarm light)
+    2) One RoomSensor above relative humidity threshold and absolute humidity is below Outdoor Sensor, 
+        than Switch with radiators is started. And stopped if threshold is reached
+    3) Toggle of Switches(dect!200 & 433MHz) via web gui 
+    4) Tracking of Sensor values over the day
+    5) dect!200 showing of actual power consumption
+    6) Running webradio if motion is and if webradio running than if no motion and no named mobile is alive webradio is stopped. 
+    
 ## Goal
 Check temperature in bath to avoid freezing temperatures, when going to bed.
 Check humidity in the cellar to avoid to much humidity by starting a fan.

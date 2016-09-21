@@ -293,13 +293,7 @@ while time.strftime('%H%M') < MAXTIME:  # timeDuration <= MAXTIME:
     if time.time() > refreshTime_webradio: 
         if vVerbose.startswith('test'):
             print str(time.time())+'while: refreshTime_webradio ('+str(refreshTime_webradio)+')'    
-        if webradio_motionActive and not webradio_active and modules_webradio and modules_webradiomotion:
-            if vVerbose.startswith('test'):
-                print str(time.time())+'while: refreshTime_webradio: webradio_motionActive, webradio_active, modules_webradio, modules_webradiomotion'    
-            refreshTime_webradioMotion = time.time() + webradio_motionTimeOut
-            (webradio_active, webradio_changed, webradio_result) = threadWebradioService('/var/sensorTool/www/webradio.station', webradio_active, False,  True)
-            sH_Log.Add(' Webradio started')
-   
+  
         if modules_webradio:
             if vVerbose.startswith('test'):
                 print str(time.time())+'while: refreshTime_webradio: modules_webradio'
@@ -313,10 +307,18 @@ while time.strftime('%H%M') < MAXTIME:  # timeDuration <= MAXTIME:
                 print str(time.time())+'while: refreshTime_webradio: not modules_webradio, webradio_active'
             (webradio_active, webradio_changed, webradio_result) = threadWebradioService('/var/sensorTool/www/webradio.station', webradio_active, True)
             sH_Log.Add(' Webradio stopped')
+
+        if webradio_motionActive and not webradio_active and modules_webradio and modules_webradiomotion:
+            if vVerbose.startswith('test'):
+                print str(time.time())+'while: refreshTime_webradio: webradio_motionActive, webradio_active, modules_webradio, modules_webradiomotion'    
+            refreshTime_webradioMotion = time.time() + webradio_motionTimeOut
+            (webradio_active, webradio_changed, webradio_result) = threadWebradioService('/var/sensorTool/www/webradio.station', webradio_active, False,  True)
+            sH_Log.Add(' Webradio started')
         
         refreshTime_webradio = time.time() + INTERVAL_WEBRADIO
 
     #print 'time '+str(time.time())+'>'+str(refreshTime_webradioMotion)+' refreshTime_webradioMotion'
+    # Timeout for webradio - stop when no motion is detected (active motioncontrol)
     if time.time() > refreshTime_webradioMotion:
         if vVerbose.startswith('test'):
             print str(time.time())+'while: refreshTime_webradioMotion ('+str(refreshTime_webradioMotion)+')'
@@ -387,7 +389,8 @@ while time.strftime('%H%M') < MAXTIME:  # timeDuration <= MAXTIME:
             DeviceRadiator.SetSensorData(RadiatorStarted)
         
         except Exception as e:
-            print e 
+            sH_Log.Add(str(e)) 
+            print e
             # pass
 
         # ############### Dynamic Config  Start ###################
@@ -467,6 +470,7 @@ while time.strftime('%H%M') < MAXTIME:  # timeDuration <= MAXTIME:
                         print str(time.time())+'while: refreshTime_sensors: dynamicConf: modules_webradiomotion: modules_webradio('+str(modules_webradio)+')'
 
         except Exception as e:
+            sH_Log.Add(str(e)) 
             print e
             pass
             

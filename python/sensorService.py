@@ -102,11 +102,14 @@ while 1:
 
     vData = sCrypt.Encrypt(str(dictSensors))
     # vData = dictSensors
-    if httpDall.provideData(vData):
-    # if httpDall.provideData(dictSensors):
+    try:
+        if httpDall.provideData(vData):
+        # if httpDall.provideData(dictSensors):
             if vVerbose.startswith('test'):
                 print datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'), "direct request from", httpDall.addr[0]
-    
+    except:
+        pass
+
     # bme280 values to dictsensor
     try:
         (degC, hPa, hRel) = bme280.readData()

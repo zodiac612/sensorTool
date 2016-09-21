@@ -147,7 +147,7 @@ def threadWebradioService(sPathToConfig = '/var/sensorTool/www/webradio.station'
             sArg = configRadio.get('running',  'action') + ' ' + configRadio.get('running',  'stream')+' '+configRadio.get('running',  'volume')
             result = 'Action: ' + configRadio.get('running',  'action') + ', Stream: ' + configRadio.get('running',  'stream')+', Volume: '+configRadio.get('running',  'volume')
             #print sArg
-            os.system("/home/pi/webradio/webradio.sh " + sArg +" &")
+            os.system("/home/pi/sensorTool/sh/webradio.sh " + sArg +" &")
             webradio_changed = True
             #os.system("echo \""+sArg+"\"")
             if configRadio.get('running', 'action') == 'start':
@@ -160,10 +160,14 @@ def threadWebradioService(sPathToConfig = '/var/sensorTool/www/webradio.station'
                 configRadio.write(configRadioFile)
     elif not boolStop and boolStart:
         sArg = 'start ' + configRadio.get('running',  'stream')+' '+configRadio.get('running',  'volume')
-        os.system("/home/pi/webradio/webradio.sh " + sArg +" &")
+        os.system("/home/pi/sensorTool/sh/webradio.sh " + sArg +" &")
         webradio_active = True
+        if configRadio.getboolean('running', 'changed'):
+            configRadio.set('running', 'changed', False)
+            with open(str(sPathToConfig), 'wb') as configRadioFile:
+                configRadio.write(configRadioFile)
     else:
-        os.system("/home/pi/webradio/webradio.sh stop &")
+        os.system("/home/pi/sensorTool/sh/webradio.sh stop &")
         webradio_changed = True
         webradio_active = False
     

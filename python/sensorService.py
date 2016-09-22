@@ -64,8 +64,8 @@ dictSensors['bme280'] = {}
 # Werte empfangene Daten bis MAXTIME aus
 # while time.strftime('%H%M') < MAXTIME:
 refreshTime = 0
-refreshTX35 = 18
-refreshTX29 = 10
+refreshTX35 = 25
+refreshTX29 = 11
 if vVerbose.startswith('test'):
     refreshTX35 = 9
     refreshTX29 = 5

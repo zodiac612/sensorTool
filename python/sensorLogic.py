@@ -13,7 +13,7 @@ import ConfigParser
 from sensorHistory import sensorHistory
 from sensorCrypt import sensorCrypt
 from time import sleep
-from plottest import plotting #ok
+from plotting import plotting_DeviceValues
 from sensorLight import sensorLight #ok
 from sensorInterval import sensorInterval #ok
 from sensorConfig import sensorConfig #ok
@@ -23,7 +23,8 @@ from sensorThreads import threadNetDiscovery #ok
 from sensorThreads import threadCreatePHPFile #ok
 from sensorThreads import threadWebradioService
 from sensorSwitches import sensorSwitches
-from sensorDevice import sensorDevice
+from sensorDevice import moduleDevice
+
 import Queue
 
 vVerbose = str(sys.argv[1])
@@ -79,27 +80,49 @@ iLog = 0
 modules_webradio = sConfig.getModuleWebradio() # ok
 webradio_active = False 
 modules_webradiomotion = sConfig.getModuleWebradiomotion() # ok
-DeviceWebradio = sensorDevice('Webradio')
 webradio_motionTimeOut = sConfig.getIntervalWebradiomotion()
 webradio_motionActive = True
 modules_surveillance = sConfig.getModuleSurveillance() # ok
 modules_motiondetector = sConfig.getModuleMotiondetector() 
 motion_detected = False
 motion_detected_report = False
-DeviceMotion=sensorDevice('Motiondetector')
+ledalarm = False
 
 modules_radiators = sConfig.getModuleRadiators() # ok
 RadiatorStarted = False
-DeviceRadiator=sensorDevice('Radiators')
 modules_relais = sConfig.getModuleRelais()
 modules_fritzactors = sConfig.getModuleFritzActors() # ok
 modules_LANDevices = sConfig.getModuleLANDevices() # ok
 LANDevices_Present = False
-DeviceNetworkDetector=sensorDevice('NetworkDeviceDetector')
 LANNetwork = sConfig.getLANNetwork()
 dictMobileHosts = sConfig.getdictMobileHosts()
 
 sConfig.SetupDynamicConfig('/var/sensorTool/www/dynamic.conf')
+
+dictActiveModules = {}
+dictActiveModules['time'] = list()
+dictActiveModules['Motiondetector']  = moduleDevice(20)
+dictActiveModules['NetworkDeviceDetector'] = moduleDevice(30)
+dictActiveModules['Webradio']  = moduleDevice(40)
+dictActiveModules['Radiators']  = moduleDevice(60)
+dictActiveModules['ledalarm']  = moduleDevice(90)
+
+dictTemperature = {}
+dictTemperature['time'] = list()
+dictRelativeHumidity = {}
+dictRelativeHumidity['time'] = list()
+dictAbsoluteHumidity = {}
+dictAbsoluteHumidity['time'] = list()
+dictPressure = {}
+dictPressure['time'] = list()
+
+for vKey in dictSensors:
+    sSensorName = dictSensors[vKey].GetSensor()
+    dictTemperature[sSensorName] = moduleDevice(0)
+    dictRelativeHumidity[sSensorName] = moduleDevice(0)
+    dictAbsoluteHumidity[sSensorName] = moduleDevice(0)
+    if dictSensors[vKey].GetBME():
+        dictPressure[sSensorName] = moduleDevice(0)
 
 if vVerbose == 'test':
     print 'MAXTIME' + str(MAXTIME)
@@ -173,11 +196,10 @@ def getHTML():
         
     vhttpResult += 'echo "</TD>\\n";\n'
     vhttpResult += 'echo "<TD>\\n";\n'
- 
-    vhttpResult += DeviceRadiator.GetHttpTable()
-    vhttpResult += DeviceMotion.GetHttpTable()
-    vhttpResult += DeviceWebradio.GetHttpTable()
-    vhttpResult += DeviceNetworkDetector.GetHttpTable()
+    
+    for vKey in dictActiveModules:
+        if vKey <> 'time':
+            vhttpResult += dictActiveModules[vKey].GetHttpTable(vKey)
  
     if modules_fritzactors:
         for vAKey in dictActors:
@@ -366,7 +388,7 @@ while time.strftime('%H%M') < MAXTIME:  # timeDuration <= MAXTIME:
                     if dictSensors[vKey].GetHex() == vSensor:
                         dictSensors[vKey].SetSensorData(dictTemp, boolBME280)
         
-            DeviceMotion.SetSensorData(motion_detected_report)
+            #DeviceMotion.SetSensorData(motion_detected_report)
             if modules_webradiomotion:
                 
                 if motion_detected_report:
@@ -383,10 +405,30 @@ while time.strftime('%H%M') < MAXTIME:  # timeDuration <= MAXTIME:
                         print refreshTime_webradioMotion                       
                     else:
                         webradio_motionActive = False
-            motion_detected_report = False        
-            DeviceWebradio.SetSensorData(webradio_active)
-            DeviceNetworkDetector.SetSensorData(LANDevices_Present)
-            DeviceRadiator.SetSensorData(RadiatorStarted)
+             
+            # Values for Diagramm 
+            
+            sPlottingTime = str(datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
+            dictTemperature['time'].append(sPlottingTime)
+            dictRelativeHumidity['time'].append(sPlottingTime)
+            dictAbsoluteHumidity['time'].append(sPlottingTime)
+            dictPressure['time'].append(sPlottingTime)
+            for vKey in dictSensors:
+                sSensorName = dictSensors[vKey].GetSensor()
+                dictTemperature[sSensorName].SetModuleValue(dictSensors[vKey].GetT())
+                dictRelativeHumidity[sSensorName] .SetModuleValue(dictSensors[vKey].GetRH())
+                dictAbsoluteHumidity[sSensorName].SetModuleValue(dictSensors[vKey].GetAH())
+                if dictSensors[vKey].GetBME():
+                    dictPressure[sSensorName].SetModuleValue(dictSensors[vKey].GetPA())
+                
+            dictActiveModules['time'].append(sPlottingTime)
+            dictActiveModules['Motiondetector'].SetModuleStatus(motion_detected_report)
+            dictActiveModules['NetworkDeviceDetector'].SetModuleStatus(LANDevices_Present)
+            dictActiveModules['Webradio'].SetModuleStatus(webradio_active)
+            dictActiveModules['Radiators'].SetModuleStatus(RadiatorStarted)
+            dictActiveModules['ledalarm'].SetModuleStatus(ledalarm)
+            motion_detected_report = False
+            ledalarm = False
         
         except Exception as e:
             sH_Log.Add(str(e)) 
@@ -525,8 +567,10 @@ while time.strftime('%H%M') < MAXTIME:  # timeDuration <= MAXTIME:
          
         boolTriggerOutdoor = True
         if boolOutdoorSensor:
-            if dictSensors[iControlSensor].GetAH() < dictSensors[iOutdoorSensor].GetAH():
-                boolTriggerOutdoor = False
+            deltaAH = 0.5
+            if dictSensors[iControlSensor].GetAH() is not None and dictSensors[iOutdoorSensor].GetAH() is not None:
+                if (float(dictSensors[iControlSensor].GetAH()) + deltaAH) < float(dictSensors[iOutdoorSensor].GetAH()):
+                    boolTriggerOutdoor = False
       
         if dictSensors[iControlSensor].GetThreshold() and RadiatorStarted == False and vBoolInterval and modules_radiators and boolTriggerOutdoor:
             counterHigh = counterHigh + 1
@@ -580,6 +624,7 @@ while time.strftime('%H%M') < MAXTIME:  # timeDuration <= MAXTIME:
         if boolInfoLight:
             if not boolLeuchte:
                 boolLeuchte = Leuchte.activate(boolLeuchte)
+                ledalarm = True
         else:
             if boolLeuchte:
                 boolLeuchte = Leuchte.deactivate(boolLeuchte)
@@ -602,64 +647,18 @@ while time.strftime('%H%M') < MAXTIME:  # timeDuration <= MAXTIME:
         if vVerbose.startswith('test'):
             #print getInfoText("Status")
             print '##### - #####'
-        
 
-        dictPlotSens = {}
-        dictPlotAussen = {}
-        for vKey in dictSensors:
-            dictPlotS = {}
-            ListT = []
-            ListRH = []
-            ListTime = []
-            sName = dictSensors[vKey].GetSensor()
-            dictPlotS['ListTime'] = dictSensors[vKey].GetListTime()
-            dictPlotS['ListT'] = dictSensors[vKey].GetListT()
-            dictPlotS['ListRH'] = dictSensors[vKey].GetListRH()
-            dictPlotS['ListAH'] = dictSensors[vKey].GetListAH()
-            dictPlotSens[sName] = dictPlotS
-        
-        if modules_webradio:
-            dictPlotS = {}
-            sName = DeviceWebradio.GetName()
-            dictPlotS['ListTime'] = DeviceWebradio.GetListTime()
-            dictPlotS['ListT'] = DeviceWebradio.GetListT()
-            dictPlotS['ListRH'] = list()
-            dictPlotS['ListAH'] = list()
-            dictPlotSens[sName] = dictPlotS
-        
-        if modules_motiondetector:
-            dictPlotS = {}
-            sName = DeviceMotion.GetName()
-            dictPlotS['ListTime'] = DeviceMotion.GetListTime()
-            dictPlotS['ListT'] = DeviceMotion.GetListT()
-            dictPlotS['ListRH'] = list()
-            dictPlotS['ListAH'] = list()
-            dictPlotSens[sName] = dictPlotS
+        threadCreatePHPFile('/var/sensorTool/www/sensor.php', getHTML())
+#        thread.start_new_thread(threadCreatePHPFile, ('/var/sensorTool/www/sensor.php', getHTML(),))        
 
-        if modules_LANDevices:
-            dictPlotS = {}
-            sName = DeviceNetworkDetector.GetName()
-            dictPlotS['ListTime'] = DeviceNetworkDetector.GetListTime()
-            dictPlotS['ListT'] = DeviceNetworkDetector.GetListT()
-            dictPlotS['ListRH'] = list()
-            dictPlotS['ListAH'] = list()
-            dictPlotSens[sName] = dictPlotS
-          
-        if modules_radiators:
-            dictPlotS = {}
-            sName = DeviceRadiator.GetName()
-            dictPlotS['ListTime'] = DeviceRadiator.GetListTime()
-            dictPlotS['ListT'] = DeviceRadiator.GetListT()
-            dictPlotS['ListRH'] = list()
-            dictPlotS['ListAH'] = list()
-            dictPlotSens[sName] = dictPlotS  
- 
-        plotting(dictPlotSens, dictPlotAussen, vVerbose)
+        plotting_DeviceValues(dictActiveModules,  'Modules',  vVerbose)
+        plotting_DeviceValues(dictTemperature, 'Temperature',  vVerbose)
+        plotting_DeviceValues(dictRelativeHumidity, 'Relative_Humidity',  vVerbose)
+        plotting_DeviceValues(dictAbsoluteHumidity, 'Absolute_Humidity',  vVerbose)
+        plotting_DeviceValues(dictPressure, 'Pressure',  vVerbose)
+        
 #        thread.start_new_thread(plotting, (dictPlotSens, dictPlotAussen, vVerbose,))
           
-        threadCreatePHPFile('/var/sensorTool/www/sensor.php', getHTML())
-#        thread.start_new_thread(threadCreatePHPFile, ('/var/sensorTool/www/sensor.php', getHTML(),))
-        
         refreshTime_sensors = time.time() + INTERVAL_SENSORS
     sleep(1) # 0.1
 

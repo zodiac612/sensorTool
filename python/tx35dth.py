@@ -76,11 +76,11 @@ class tx35dth(object):
 #                self.__CompareValuesPresent = false
             self.__StateThreshold = 'g' # y, r
             self.__StateDelta = 'g' # y, r
-            self.__ListTime = list()
-            self.__ListT = list()
-            self.__ListRH = list()
-            self.__ListPa = list()
-            self.__ListAH = list()
+#            self.__ListTime = list()
+#            self.__ListT = list()
+#            self.__ListRH = list()
+#            self.__ListPa = list()
+#            self.__ListAH = list()
 
         def __setTemperatureAvg(self, vT):
             if self.__temperature_count is None:
@@ -120,7 +120,7 @@ class tx35dth(object):
                         self.__last_temperature = self.__temperature
                     self.__temperature = vLine['T']
                     self.__setTemperatureAvg(vLine['T'])
-                    self.__ListT.append(self.__temperature)     
+                    #self.__ListT.append(self.__temperature)     
                     #print 'ListT: ' + str(self.__ListT)
                 
                 if 'RH' in vLine:
@@ -132,15 +132,15 @@ class tx35dth(object):
                             self.__last_humidity = self.__humidity
                         self.__humidity = vLine['RH']
                         self.__setHumidityAvg(vLine['RH'])
-                        self.__ListRH.append(self.__humidity)
+                        #self.__ListRH.append(self.__humidity)
                         self.__CalculateAbsoluteHumidity()
-                        self.__ListAH.append(self.__absolutefeuchte)
+                        #self.__ListAH.append(self.__absolutefeuchte)
                         #print 'ListRH: ' + str(self.__ListRH)
                 
                 if 'Time' in vLine:
                     self.__last_time = self.__time
                     self.__time = vLine['Time']
-                    self.__ListTime.append(self.__time)
+                    #self.__ListTime.append(self.__time)
                     #print 'ListTime: ' + str(self.__ListTime)
 
                 if 'hPa' in vLine:
@@ -193,20 +193,20 @@ class tx35dth(object):
                 self.__absolutefeuchte = str(round(float(vAbsoluteFeuchte), 2)) 
 #            return vAbsoluteFeuchte
         
-        def GetListT(self):
-            return self.__ListT
+#        def GetListT(self):
+#            return self.__ListT
 
-        def GetListTime(self):
-            return self.__ListTime
-
-        def GetListRH(self):
-            return self.__ListRH
-            
-        def GetListAH(self):
-            return self.__ListAH            
-
-        def GetListPa(self):
-            return self.__ListPa
+#        def GetListTime(self):
+#            return self.__ListTime
+#
+#        def GetListRH(self):
+#            return self.__ListRH
+#            
+#        def GetListAH(self):
+#            return self.__ListAH            
+#
+#        def GetListPa(self):
+#            return self.__ListPa
        
         def GetHex(self):
             return self.__hexCode

@@ -585,7 +585,7 @@ while time.strftime('%H%M') < MAXTIME:  # timeDuration <= MAXTIME:
          
         boolTriggerOutdoor = True
         if boolOutdoorSensor:
-            deltaAH = 0.5
+            deltaAH = 1.0 #0.5
             if dictSensors[iControlSensor].GetAH() is not None and dictSensors[iOutdoorSensor].GetAH() is not None:
                 if (float(dictSensors[iControlSensor].GetAH())) < (float(dictSensors[iOutdoorSensor].GetAH())+ deltaAH):
                     boolTriggerOutdoor = False

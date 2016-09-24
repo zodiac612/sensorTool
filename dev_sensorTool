@@ -1,0 +1,89 @@
+### BEGIN INIT INFO
+# Provides:          sensorTool
+# Required-Start:    $remote_fs $syslog
+# Required-Stop:     $remote_fs $syslog
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+# Short-Description: Starts up the sensorTool scripts.
+# Description:       This service is used to gather data from different sources and send them to the cloud server/database. Furthermore, it adds an URL link to the local IP.
+### END INIT INFO
+
+MYPATH="/home/pi/sensorTool/python"
+LOGFILE1="/var/sensorTool/sensorThreading.log"
+SCRIPT1="sensorThreading.py"
+
+echo "SensorTool Threading Test"
+
+case "$1" in 
+    start)
+	echo "Timeservice force update"
+	service ntp stop
+	ntpd -q -g -x -n
+	service ntp start
+	sleep 20
+	echo "preparing www"
+	mkdir /var/sensorTool/www
+	cp /home/pi/sensorTool/www/* /var/sensorTool/www/
+	chown -R pi.pi /var/sensorTool/www
+	chmod 666 /var/sensorTool/www/dynamic.conf
+	chmod 666 /var/sensorTool/www/webradio.station
+	sleep 2
+	service apache2 restart
+
+	echo "Starting sensorTool"
+	echo '' > $LOGFILE1
+	$MYPATH/$SCRIPT1 start >>$LOGFILE1 2>&1 &
+	echo "Stop pilight service" #only needed for switching, when necessery
+	sleep 10
+	service pilight stop
+        ;;
+    test)
+        echo "(Re)Starting ".$SCRIPT1." in verbose mode"
+	killall $SCRIPT1 >/dev/null 2>&1
+        $MYPATH/$SCRIPT2 test
+        ;;
+    status)
+        echo "Status ".$SCRIPT1
+        ps -ef | grep $SCRIPT1
+        ;;
+    stop)
+        echo "Stopping sensorTool"
+        killall $SCRIPT1 >/dev/null 2>&1
+	sleep 1
+	killall mplayer
+	/home/pi/RelaisSchalten aus
+	/home/pi/LedSchalten aus
+        ;;
+    restart)
+        echo "Restarting sensorTool"
+        echo "Stopping sensorTool"
+        killall $SCRIPT1 >/dev/null 2>&1
+	sleep 1
+	killall mplayer
+	/home/pi/RelaisSchalten aus
+	/home/pi/LedSchalten aus
+	echo "preparing..."
+	mkdir /var/sensorTool/www
+	rm -f /var/sensorTool/*.*
+	rm -f /var/sensorTool/www/*
+	cp /home/pi/sensorTool/www/* /var/sensorTool/www/
+	chown -R pi.pi /var/sensorTool/www
+	chmod 666 /var/sensorTool/www/dynamic.conf
+	chmod 666 /var/sensorTool/www/webradio.station
+	sleep 2
+	service apache2 restart
+
+	echo "Starting sensorTool"
+	echo '' > $LOGFILE1
+	$MYPATH/$SCRIPT1 start >>$LOGFILE1 &
+	echo "Stop pilight service" #only needed for switching, when necessery
+	sleep 2
+	service pilight stop
+        ;;
+    *)
+        echo "Usage: service sensorTool start|stop|test|status"
+        exit 1
+        ;;
+esac
+
+exit 0

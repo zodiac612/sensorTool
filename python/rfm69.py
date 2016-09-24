@@ -1,7 +1,7 @@
 import RPi.GPIO as GPIO
 import spidev
 import threading
-#import time
+import time
 
 FXOSC = 32E6
 FSTEP = FXOSC / (1<<19)
@@ -79,10 +79,10 @@ MODE_TX = 3
 MODE_RX = 4
 
 class Rfm69:
-    def __init__(self, cs = 0, gpio_int = 25):
+    def __init__(self, spiport = 0, gpio_int = 25):
         self.__event = threading.Event()
         self.__spi = spidev.SpiDev()
-        self.__spi.open(0, cs)
+        self.__spi.open(0, spiport)
         self.__spi.max_speed_hz=int(5E6)
         self.__gpio_int = gpio_int
         
@@ -98,17 +98,14 @@ class Rfm69:
                 err = True
                 break
         if err == True:
-            print("ERROR! RFM69 not found!")
+            print "ERROR! RFM69 not found!"
             return
 
-        print ("RFM69 found!")
+        print "RFM69 found!"
         GPIO.setmode(GPIO.BCM)
         GPIO.setup(gpio_int, GPIO.IN)
         GPIO.add_event_detect(gpio_int, GPIO.RISING, callback=self.__RfmIrq)
-
-        self.__WriteReg(RegOpMode, MODE_STDBY << 2)
-        self.__WaitMode()
-       
+                
         config = {}
         config[RegDataModul] = 0 #packet mode, modulation shaping, modulation
         config[RegPayloadLength] = 0
@@ -119,7 +116,7 @@ class Rfm69:
         config[RegPacketConfig2] = 0 #1<<AutoRxRestartOn
         config[RegAfcFei] = 1<<3 | 1<<1 | 0<<2  #AFC auto clear, clear AFC, afcAutoOn
         config[RegTestDagc] = 0x30
-        config[RegRssiThresh] = 0x90
+        config[RegRssiThresh] = 0xE0
         config[RegFifoThresh] = 0x8F
         config[RegBitrateMsb] = 0x1A
         config[RegBitrateLsb] = 0x0B
@@ -133,6 +130,7 @@ class Rfm69:
         print("INIT COMPLETE")
     
     def __RfmIrq(self, ch):
+        #print("IRQ!")
         self.__event.set();
     
     def __WriteReg(self, reg, val):
@@ -265,15 +263,10 @@ class Rfm69:
     def ReceivePacket(self, length):
         self.__WriteReg(RegPayloadLength, length)
         
-        self.__SetDioMapping(0, 2) #DIO0 -> SyncAddress
+        self.__SetDioMapping(0, 1) #DIO0 -> PayloadReady
         self.__SetDioMapping(1, 3)
         self.__SetReg(RegOpMode, 7<<2, 4<<2) #RX mode
 
-        self.__event.wait()
-        self.__event.clear()
-        self.__SetDioMapping(0, 1) #DIO0 -> PayloaReady
-
-        rssi = -self.ReadReg(RegRssiValue) / 2
         self.__event.wait()
         self.__event.clear()
 
@@ -283,4 +276,5 @@ class Rfm69:
         
         self.__WriteReg(RegOpMode, 0) #idle mode
         
-        return (result, rssi)
+        return result
+

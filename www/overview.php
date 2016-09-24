@@ -17,26 +17,36 @@ echo "<h3>Raspberry PI SensorTool Status<BR />". date("d.m.Y",time())."</h3>\n";
 echo "<BR />\n";
 
 echo "<table class=\"chart\"><TR>\n";
+// Read the pngs from filesystem
+$arrFiles=array();
 $iCount = 0;
 if ($handle = opendir('.')) {
     while (false !== ($entry = readdir($handle))) {
         if ($entry != "." && $entry != "..") {
             if(substr($entry, -4) == ".png") {
-                echo "<TD class=\"chart\">".$entry."<br />\n";
-                echo "<img class=\"chart\" alt=".$entry." src=".$entry." />\n";
-                echo "</TD>\n";
-                $iCount =  $iCount + 1;
-                if ($iCount == 2 ) {
-                    echo "</TR><TR>\n";
-                    $iCount = 0;
-                }
+                $arrFiles[]=$entry;
             }
             //echo "$entry\n";
         }
     }
     closedir($handle);
 }
-echo "</TR></table>\n";
+//sort the pngs
+sort($arrFiles);
+//generate the html
+foreach ($arrFiles as $vKey => $vValue)
+{
+    echo "<TD class=\"chart\">".$vValue."<br />\n";
+    echo "<img class=\"chart\" alt=".$vValue." src=".$vValue." />\n";
+    echo "</TD>\n";
+    //echo $vKey."---".$vValue."<br />\n";
+    $iCount =  $iCount + 1;
+    if ($iCount == 2 ) {
+        echo "</TR><TR>\n";
+        $iCount = 0;
+    }    
+}
 
+echo "</TR></table>\n";
 echo "</body>\n";
 ?>

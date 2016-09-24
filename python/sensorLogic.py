@@ -11,9 +11,9 @@ import os, sys, ast
 from whatsapp import sendWhatsApps
 import ConfigParser
 from sensorHistory import sensorHistory
-from sensorCrypt import sensorCrypt
 from time import sleep
 from plotting import plotting_DeviceValues
+from sensorCrypt import sensorCrypt
 from sensorLight import sensorLight #ok
 from sensorInterval import sensorInterval #ok
 from sensorConfig import sensorConfig #ok
@@ -24,6 +24,7 @@ from sensorThreads import threadCreatePHPFile #ok
 from sensorThreads import threadWebradioService
 from sensorSwitches import sensorSwitches
 from sensorDevice import moduleDevice
+#from sensorService import threadSensors
 
 import Queue
 
@@ -188,25 +189,25 @@ def getInfoCSV():
 
 # print html status output
 def getHTML():
-    vhttpResult = ''
-    vhttpResult += 'echo "<DIV class=\\"sensor\\"><TABLE class=\\"sensor\\"><TR>\\n";\n'
-    vhttpResult += 'echo "<TD>\\n";\n'
-    for vKey in dictSensors:
-        vhttpResult += dictSensors[vKey].GetHttpTable()
-        
-    vhttpResult += 'echo "</TD>\\n";\n'
-    vhttpResult += 'echo "<TD>\\n";\n'
-    
-    for vKey in dictActiveModules:
-        if vKey <> 'time':
-            vhttpResult += dictActiveModules[vKey].GetHttpTable(vKey)
- 
-    if modules_fritzactors:
-        for vAKey in dictActors:
-            vhttpResult += dictActors[vAKey].GetHttpTable()
-        
-    vhttpResult += 'echo "</TD></TR></TABLE></DIV>\\n";\n'
-    return vhttpResult
+   vhttpResult = ''
+   vhttpResult += 'echo "<DIV class=\\"sensor\\"><TABLE class=\\"sensor\\"><TR>\\n";\n'
+   vhttpResult += 'echo "<TD>\\n";\n'
+   for vKey in dictSensors:
+       vhttpResult += dictSensors[vKey].GetHttpTable()
+       
+   vhttpResult += 'echo "</TD>\\n";\n'
+   vhttpResult += 'echo "<TD>\\n";\n'
+   
+   for vKey in dictActiveModules:
+       if vKey <> 'time':
+           vhttpResult += dictActiveModules[vKey].GetHttpTable(vKey)
+
+   if modules_fritzactors:
+       for vAKey in dictActors:
+           vhttpResult += dictActors[vAKey].GetHttpTable()
+       
+   vhttpResult += 'echo "</TD></TR></TABLE></DIV>\\n";\n'
+   return vhttpResult
 
 # refresh for sensor data
 refreshTime_sensors = time.time() + INTERVAL_SENSORS
@@ -225,6 +226,7 @@ DiscoveryInProgress = False
 refreshTime_Queue = 5
 INTERVAL_QUEUE = 5
 refreshTime_webradioMotion = time.time() + webradio_motionTimeOut
+
 # FAInProgress = False
 # qFA = Queue.LifoQueue(maxsize=1)
 
@@ -359,15 +361,31 @@ while time.strftime('%H%M') < MAXTIME:  # timeDuration <= MAXTIME:
             print str(refreshTime_sensors) + '##' + str(time.time())
         # Werte holen per http request ::D
         try:
-            # print 'Get HTTP Service'
-            r = requests.get("http://" + SERVER + ":6666")
-            # request enthaelt "
-            # print r
-            vR = sCrypt.Decrypt(r.text[1:len(r.text) - 1])
-            # print vR
             dictResponse = {}
-            dictResponse = ast.literal_eval(str(vR))
-            #print dictResponse
+            
+            vBoolUseSensorValueFile = False
+            if vBoolUseSensorValueFile:
+                try:
+                    handle = open ('/var/sensorTool/sensorValues', 'r')
+                    line = " "
+                    while line:
+                        line = handle.readline()
+                        print line
+                        if len(line) > 0:
+                            dictResponse = ast.literal_eval(line)
+                    handle.close()
+                except Exception as e:
+                    print str(e)
+            else:
+                # print 'Get HTTP Service'
+                r = requests.get("http://" + SERVER + ":6666")
+                # request enthaelt "
+                # print r
+                vR = sCrypt.Decrypt(r.text[1:len(r.text) - 1])
+                # print vR
+                dictResponse = ast.literal_eval(str(vR))
+
+            print 'dictResponse: ' + str(dictResponse) 
             for vSensor in dictResponse:
                 dictTemp = {}
                 dictTemp['ID'] = vSensor
@@ -569,7 +587,7 @@ while time.strftime('%H%M') < MAXTIME:  # timeDuration <= MAXTIME:
         if boolOutdoorSensor:
             deltaAH = 0.5
             if dictSensors[iControlSensor].GetAH() is not None and dictSensors[iOutdoorSensor].GetAH() is not None:
-                if (float(dictSensors[iControlSensor].GetAH()) + deltaAH) < float(dictSensors[iOutdoorSensor].GetAH()):
+                if (float(dictSensors[iControlSensor].GetAH())) < (float(dictSensors[iOutdoorSensor].GetAH())+ deltaAH):
                     boolTriggerOutdoor = False
       
         if dictSensors[iControlSensor].GetThreshold() and RadiatorStarted == False and vBoolInterval and modules_radiators and boolTriggerOutdoor:
@@ -651,11 +669,11 @@ while time.strftime('%H%M') < MAXTIME:  # timeDuration <= MAXTIME:
         threadCreatePHPFile('/var/sensorTool/www/sensor.php', getHTML())
 #        thread.start_new_thread(threadCreatePHPFile, ('/var/sensorTool/www/sensor.php', getHTML(),))        
 
-        plotting_DeviceValues(dictActiveModules,  'Modules',  vVerbose)
-        plotting_DeviceValues(dictTemperature, 'Temperature',  vVerbose)
-        plotting_DeviceValues(dictRelativeHumidity, 'Relative_Humidity',  vVerbose)
-        plotting_DeviceValues(dictAbsoluteHumidity, 'Absolute_Humidity',  vVerbose)
-        plotting_DeviceValues(dictPressure, 'Pressure',  vVerbose)
+        plotting_DeviceValues(dictActiveModules,  '1_Modules',  vVerbose)
+        plotting_DeviceValues(dictTemperature, '3_Temperature',  vVerbose,  -20,  50)
+        plotting_DeviceValues(dictRelativeHumidity, '4_Relative_Humidity',  vVerbose)
+        plotting_DeviceValues(dictAbsoluteHumidity, '2_Absolute_Humidity',  vVerbose,  0,  30)
+        plotting_DeviceValues(dictPressure, '9_Pressure',  vVerbose,  700,  1100)
         
 #        thread.start_new_thread(plotting, (dictPlotSens, dictPlotAussen, vVerbose,))
           

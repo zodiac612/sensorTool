@@ -14,60 +14,44 @@ LOGFILE2="/var/sensorTool/sensorLogic.log"
 SCRIPT1="sensorService.py"
 SCRIPT2="sensorLogic.py"
 SCRIPT3="/home/pi/sensorTool/sh/checkSensorTool.sh"
-#SCRIPT4="/home/pi/webradio/webradio.py"
-#SCRIPT3="checkInMon.py"
-
-#WIFIRECONNECT="/home/pi/sensorTool/wifi-reconnect.sh"
-WIFIRECONNECT=""
 
 case "$1" in 
     start)
-	value=$( ps ax | grep -c "$WIFIRECONNECT" )
-	if [ $value -lt 2 ]
-	then
-		echo "Starting wifi reconnect script"
-		$WIFIRECONNECT > /dev/null 2>&1 &
-	fi
-	echo "Timeservice force update"
-	service ntp stop
-	ntpd -q -g -x -n
-	service ntp start
-	sleep 20
-	echo "preparing www"
-	mkdir /var/sensorTool/www
-	cp /home/pi/sensorTool/www/* /var/sensorTool/www/
-	chown -R pi.pi /var/sensorTool/www
-	chmod 666 /var/sensorTool/www/dynamic.conf
-	chmod 666 /var/sensorTool/www/webradio.station
-	sleep 2
-	service apache2 restart
-
-	echo "Starting sensorTool"
-#	$MYPATH/$SCRIPT1 start >/dev/null 2>&1 &
-	echo '' > $LOGFILE1
-	echo '' > $LOGFILE2
-	$MYPATH/$SCRIPT1 start >>$LOGFILE1 2>&1 &
-	$MYPATH/$SCRIPT2 start >>$LOGFILE2 2>&1 &
-#	$MYPATH/$SCRIPT3 start >/dev/null 2>&1 &
-#	echo "Start Webradio"
-#	python $SCRIPT4 >/dev/null 2>&1 &
-#	/home/pi/sensorTool/sh/webradio.sh IHN0YXJ0IGh0dHA6Ly9zdHJlYW0ucmFkaW84LmRlOjgwMDAvbGl2ZSAy
-	echo "Stop pilight service" #only needed for switching, when necessery
-	sleep 10
-	service pilight stop
+		echo "Timeservice force update"
+		service ntp stop
+		ntpd -q -g -x -n
+		service ntp start
+		sleep 20
+		echo "preparing www"
+		mkdir /var/sensorTool/www
+		cp /home/pi/sensorTool/www/* /var/sensorTool/www/
+		chown -R pi.pi /var/sensorTool/www
+		chmod 666 /var/sensorTool/www/dynamic.conf
+		chmod 666 /var/sensorTool/www/webradio.station
+		sleep 2
+		service apache2 restart
+	
+		echo "Starting sensorTool"
+		echo '' > $LOGFILE1
+		echo '' > $LOGFILE2
+		$MYPATH/$SCRIPT1 start >>$LOGFILE1 2>&1 &
+		$MYPATH/$SCRIPT2 start >>$LOGFILE2 2>&1 &
+		echo "Stop pilight service" #only needed for switching, when necessery
+		sleep 10
+		service pilight stop
         ;;
     test)
-	$MYPATH/$SCRIPT1 test >/dev/null 2>&1 &
-	$MYPATH/$SCRIPT2 test
+		$MYPATH/$SCRIPT1 test >/dev/null 2>&1 &
+		$MYPATH/$SCRIPT2 test
         ;;
     testService)
         echo "(Re)Starting ".$SCRIPT1." in verbose mode"
-	killall $SCRIPT1 >/dev/null 2>&1
+		killall $SCRIPT1 >/dev/null 2>&1
         $MYPATH/$SCRIPT1 test
         ;;
     testLogic)
         echo "(Re)Starting ".$SCRIPT2." in verbose mode"
-	killall $SCRIPT2 >/dev/null 2>&1
+		killall $SCRIPT2 >/dev/null 2>&1
         $MYPATH/$SCRIPT2 test
         ;;
     status)
@@ -82,9 +66,41 @@ case "$1" in
 	sleep 1
         killall $SCRIPT3 >/dev/null 2>&1
 	sleep 1
-	killall mplayer
-	/home/pi/RelaisSchalten aus
-	/home/pi/LedSchalten aus
+		killall mplayer
+		/home/pi/RelaisSchalten aus
+		/home/pi/LedSchalten aus
+        ;;
+    restart)
+        echo "Restarting sensorTool"
+        echo "Stopping sensorTool"
+        killall $SCRIPT1 >/dev/null 2>&1
+		sleep 1
+        killall $SCRIPT2 >/dev/null 2>&1
+		sleep 1
+        killall $SCRIPT3 >/dev/null 2>&1
+		sleep 1
+		killall mplayer
+		/home/pi/RelaisSchalten aus
+		/home/pi/LedSchalten aus
+		echo "preparing..."
+		mkdir /var/sensorTool/www
+		rm -f /var/sensorTool/*.*
+		rm -f /var/sensorTool/www/*
+		cp /home/pi/sensorTool/www/* /var/sensorTool/www/
+		chown -R pi.pi /var/sensorTool/www
+		chmod 666 /var/sensorTool/www/dynamic.conf
+		chmod 666 /var/sensorTool/www/webradio.station
+		sleep 2
+		service apache2 restart
+
+		echo "Starting sensorTool"
+		echo '' > $LOGFILE1
+		echo '' > $LOGFILE2
+		$MYPATH/$SCRIPT1 start >>$LOGFILE1 &
+		$MYPATH/$SCRIPT2 start >>$LOGFILE2 2>&1 &
+		echo "Stop pilight service" #only needed for switching, when necessery
+		sleep 2
+		service pilight stop
         ;;
     *)
         echo "Usage: service sensorTool start|stop|testService|testLogic|status"

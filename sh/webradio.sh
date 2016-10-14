@@ -37,12 +37,12 @@ case "$1" in
         fi
         ;;
     stop)
-        if [ -z "$PID" ] ; then
-            echo "webradio not started"
-        else
-            echo "Stopping mplayer" $PID
+        #if [ -z "$PID" ] ; then
+            #echo "webradio not started"
+        #else
+            echo "Stopping mplayer PID: " $PID
             killall $SCRIPT1 >/dev/null 2>&1
-        fi
+        #fi
         ;;
     *)
         echo "USAGE webradio start [stream] | stop | status"

@@ -334,13 +334,13 @@ class tx35dth(object):
             return result
         
         def GetDeltaMessage(self):
-            self.__delta_message += '\n['
-            self.__delta_message += str(self.__time)[-8:-3]
-            self.__delta_message += '] '
-            self.__delta_message += str(self.__temperature)
-            self.__delta_message += 'C; '                
-            self.__delta_message += str(self.__humidity)
-            self.__delta_message += '%'
+#            self.__delta_message += '\n['
+#            self.__delta_message += str(self.__time)[-8:-3]
+#            self.__delta_message += '] '
+#            self.__delta_message += str(self.__temperature)
+#            self.__delta_message += 'C; '                
+#            self.__delta_message += str(self.__humidity)
+#            self.__delta_message += '%'
             return self.__delta_message
                 
 #         def SetActTrigger(self, iInt):
@@ -411,41 +411,25 @@ class tx35dth(object):
             # print str(self.__name) + ' High:' + str(self.__ActTriggerHigh) + ' Low:' + str(self.__ActTriggerLow) + ' result: ' + str(result)
             return result
 
-        def GetInfo(self, csv=True, lacrosse=False):
+        def GetCSVInfo(self, csv=True, extended=False):
             result = ''
             if csv:
-                if lacrosse:
-                    vSensor = {}
-                    vSensor['Sensor'] = self.__name
-                    vSensor['Time'] = self.__time
-                    vSensor['RH'] = self.__humidity
-                    vSensor['ID'] = self.__hexCode
-                    vSensor['T'] = self.__temperature
-                    if self.__bme280:
-                        vSensor['HPA'] = self.__pressure
-
-                    result = vSensor
+                result = str(self.__name) + ';'
+                result += str(self.__time)[11:16] + ';'
+                result += str(self.__temperature) + ';'
+                result += str(self.__humidity) + ';'
+                if self.__humidity is not None:
+                    result += str(self.__absolutefeuchte) + ';'
                 else:
-                    result = str(self.__name) + ';'
-                    result = result + str(self.__time)[11:16] + ';'
-                    result = result + str(self.__temperature) + ';'
-                    result = result + str(self.__humidity) + ';'
+                    result += ';'
+                if extended:
+                    if self.__temperature_avg is not None:
+                        result += str(round(float(self.__temperature_avg), 2)) + 'Cavg; '
+                        if self.__humidity is not None:
+                            result += str(self.__humidity) + '%; '
+                    result += str(round(float(self.__humidity_avg), 2)) + ' %avg; '
                     if self.__bme280:
                         result = result + str(self.__pressure) + ';'
-            else:
-                result = str(self.__name) + ': '
-                result += str(self.__temperature) + 'C; '
-            if self.__temperature_avg is not None:
-                result += str(round(float(self.__temperature_avg), 2)) + 'Cavg; '
-                if self.__humidity is not None:
-                    result += str(self.__humidity) + '%; '
-                    result += str(round(float(self.__humidity_avg), 2)) + ' %avg; '
-                
-                if self.__bme280:
-                    result = result + str(self.__pressure) + 'hPa; '
-                
-                result = result + '[' + str(self.__time)[11:16] + ']'
-               
             return result
         
         def GetDebugInfo(self):

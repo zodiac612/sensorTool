@@ -2,7 +2,7 @@
 # -*- coding: latin-1 -*-
 
 import ConfigParser
-from sensorThreads import threadCreatePHPFile #ok
+from sensorThreads import threadCreateFile #ok
 
 def sensorSwitches(PathToConfig='/home/pi/sensorTool/switches.conf', vVerbose='start'):
     config = ConfigParser.ConfigParser()
@@ -74,7 +74,7 @@ def sensorSwitches(PathToConfig='/home/pi/sensorTool/switches.conf', vVerbose='s
         vhttpResult += 'echo "	<br />\n";\n'
         
     #print vhttpResult
-    threadCreatePHPFile('/var/sensorTool/www/preswitch.php', vhttpResult) 
+    threadCreateFile('/var/sensorTool/www/preswitch.php', vhttpResult) 
 
 #sensorSwitches()
  

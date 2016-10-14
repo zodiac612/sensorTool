@@ -1,0 +1,31 @@
+<?php
+echo "<table class=\"topmenu7\">\n";
+echo "  <TR>\n";
+echo "    <TD class=\"topmenu7\">\n";
+echo "      <form action=\"http://raspberrypi/index_kiosk.php\">\n";
+echo "        <input type=\"submit\" value=\"Home\" />\n";
+echo "      </form>\n";
+echo "    </TD>\n";
+echo "    <TD class=\"topmenu7\">\n";
+echo "      <form action=\"http://raspberrypi/switch7.php\">\n";
+echo "        <input type=\"submit\" value=\"Schalter\" />\n";
+echo "      </form>\n";
+echo "    </TD>\n";
+echo "    <TD class=\"topmenu7\">\n";
+echo "      <form action=\"http://raspberrypi/overview.php\">\n";
+echo "        <input type=\"submit\" value=\"Diagramme\" />\n";
+echo "      </form>\n";
+echo "    </TD>\n";
+echo "    <TD class=\"topmenu7\">\n";
+echo "      <form action=\"http://raspberrypi/settings.php\">\n";
+echo "        <input type=\"submit\" value=\"Einstellungen\" />\n";
+echo "      </form>\n";
+echo "    </TD>\n";
+echo "    <TD class=\"topmenu7\">\n";
+echo "      <form action=\"http://raspberrypi/index.php\">\n";
+echo "        <input type=\"submit\" value=\"Index\" />\n";
+echo "      </form>\n";
+echo "    </TD>\n";
+echo "  </TR>\n";
+echo "</table>\n";
+?>

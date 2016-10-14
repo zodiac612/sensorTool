@@ -2,12 +2,13 @@
 # -*- coding: latin-1 -*-
 import datetime  # time functions
 import thread 
-from sensorThreads import threadCreatePHPFile
+from sensorThreads import threadCreateFile
 
 class sensorHistory(object):
-        def __init__(self, sPathToExport1='',   sPathToExport2=''):
+        def __init__(self, sPathToExport1='',   sPathToExport2='',  sPathToExport3=''):
             self.__dictLog = {}
             self.__counterLog = 0
+            self.__sPathToExport3 = sPathToExport3
             self.__sPathToExport2 = sPathToExport2
             self.__sPathToExport1 = sPathToExport1
 
@@ -21,13 +22,19 @@ class sensorHistory(object):
             self.__dictLog[self.__counterLog] = dictLine
             if self.__sPathToExport1 <> '':
                 try:  
-                    thread.start_new_thread(threadCreatePHPFile, (self.__sPathToExport1, self.GetHttpLastMessage(),))
+                    thread.start_new_thread(threadCreateFile, (self.__sPathToExport1, self.GetHttpLastMessage(),))
                 except:
                     pass
             
             if self.__sPathToExport2 <> '':
                 try:  
-                    thread.start_new_thread(threadCreatePHPFile, (self.__sPathToExport2,  self.GetHttpTable(),))
+                    thread.start_new_thread(threadCreateFile, (self.__sPathToExport2,  self.GetHttpTable(),))
+                except:
+                    pass
+
+            if self.__sPathToExport3 <> '':
+                try:  
+                    thread.start_new_thread(threadCreateFile, (self.__sPathToExport3,  self.GetCSVLastMessage(), 'csv'))
                 except:
                     pass
                    
@@ -60,6 +67,12 @@ class sensorHistory(object):
             result += '<TD class=\\"history\\">' + str(self.__dictLog[self.__counterLog]['text']) + '</TD>'
             result += '</TR></TABLE></DIV>' 
             result += '\\n";\n'
+            return result
+
+        def GetCSVLastMessage(self):
+            result = str(self.__counterLog) + ';'
+            result += str(self.__dictLog[self.__counterLog]['time'])[11:19] + ';'
+            result += str(self.__dictLog[self.__counterLog]['text'])[0:80] + ';'
             return result
 
 # vim: tabstop=8 expandtab shiftwidth=4 softtabstop=4

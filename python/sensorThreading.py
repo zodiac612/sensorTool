@@ -8,7 +8,7 @@ import threading# import Thread
 from sensorThreadingSensors import threadSensors
 from sensorThreadingLogic import threadLogic
 import sys
-import time
+#import time
 #import gpio  # led output
 #import ConfigParser
 import os

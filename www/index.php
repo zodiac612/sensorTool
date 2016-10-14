@@ -8,14 +8,15 @@ echo "	<title>Raspberry PI Status</title>\n";
 echo "	<meta http-equiv=\"Content-Type\" content=\"text/html; charset=ISO-8859-15\" />\n";
 echo "  <link rel=\"stylesheet\" href=\"stylesheet.css\">";
 echo "</head>\n";
-echo "<body>\n";
+echo "<body width=\"470px\">\n";
 
 include 'top_menue.php';
 //include 'precheck.php';
 
 echo "<h3>Raspberry PI SensorTool Status<BR />". date("d.m.Y",time())."</h3>\n";
-echo "<BR />\n";
+//echo "<BR />\n";
 
+//include 'webradio_short.php';
 //if ( $boolLCL ) {
 //}
 include 'loglatestentry.php';

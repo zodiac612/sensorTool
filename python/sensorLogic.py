@@ -20,7 +20,7 @@ from sensorConfig import sensorConfig #ok
 from sensorThreads import threadPICAM2
 from sensorThreads import threadFritzActors2 #ok
 from sensorThreads import threadNetDiscovery #ok
-from sensorThreads import threadCreatePHPFile #ok
+from sensorThreads import threadCreateFile #ok
 from sensorThreads import threadWebradioService
 from sensorSwitches import sensorSwitches
 from sensorDevice import moduleDevice
@@ -75,7 +75,7 @@ iOutdoorSensor = sConfig.getiOutdoorSensor()
 boolOutdoorSensor = False
 if iOutdoorSensor is not None:
    boolOutdoorSensor = True
-sH_Log = sensorHistory('/var/sensorTool/www/loglatestentry.php', '/var/sensorTool/www/logdata.php')
+sH_Log = sensorHistory('/var/sensorTool/www/loglatestentry.php', '/var/sensorTool/www/logdata.php',  '/var/sensorTool/www/loglatestentry7.csv')
 iLog = 0
 
 modules_webradio = sConfig.getModuleWebradio() # ok
@@ -97,6 +97,7 @@ modules_LANDevices = sConfig.getModuleLANDevices() # ok
 LANDevices_Present = False
 LANNetwork = sConfig.getLANNetwork()
 dictMobileHosts = sConfig.getdictMobileHosts()
+webradioBlocked=False
 
 sConfig.SetupDynamicConfig('/var/sensorTool/www/dynamic.conf')
 
@@ -151,64 +152,102 @@ counterHigh = 0
 counterLow = 0
 timeDuration = 0
 
-# functions for print out and WhatsApp
-def getInfoText(vStatus):
-    vHeader = vTitel
-    if vVerbose.startswith('test'):
-        vHeader += ' Test\n'
-    else:
-        vHeader += '\n'
-        
-    vNow = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S') + ' ' + vStatus
-    vSensorPaket = ''
-    for vKey in dictSensors:
-        vSensorPaket += '\n ' + str(dictSensors[vKey].GetInfo(False, False))
-        
-    vActorsPaket = ''
-    for vAKey in dictActors:
-        vActorsPaket += '\n' + str(dictActors[vAKey].GetInfo(False, False))
-        
-    vGPIOStatus = ''
-#    vGPIOStatus += '\n Relais: ' + str(RadiatorStarted) + ' (' + str(RelayIN1.isOn) + '|' + str(RelayIN2.isOn) + ')'
-    vGPIOStatus += '\n Code:   ' + str(timeDuration) + ';' + str(counterHigh) + ';' + str(counterLow)
-#    vGPIOStatus += '\n LED:    ' + str(LedG.isOn) + str(LedY.isOn) + str(LedR.isOn)
-    vReturnText = vHeader + vNow + vSensorPaket + vActorsPaket + vGPIOStatus  # + str(dictActors)
-    return vReturnText
-
-# print CSV
-def getInfoCSV():
-    vReturnText = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S') + ';'
-    vReturnText = vReturnText + str(RadiatorStarted) + ';'
-    vReturnText = vReturnText + str(timeDuration) + ';' + str(counterHigh) + ';' + str(counterLow) + ";"
-#    vReturnText = vReturnText + str(RelayIN1.isOn) + str(RelayIN2.isOn) + ";"
-#    vReturnText = vReturnText + str(LedG.isOn) + str(LedY.isOn) + str(LedR.isOn) + ";"
-    for vKey in dictSensors:
-        vReturnText = vReturnText + str(dictSensors[vKey].GetInfo(True, False))
-        
-    return vReturnText
+## functions for print out and WhatsApp
+#def getInfoText(vStatus):
+#    vHeader = vTitel
+#    if vVerbose.startswith('test'):
+#        vHeader += ' Test\n'
+#    else:
+#        vHeader += '\n'
+#        
+#    vNow = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S') + ' ' + vStatus
+#    vSensorPaket = ''
+#    for vKey in dictSensors:
+#        vSensorPaket += '\n ' + str(dictSensors[vKey].GetInfo(False, False))
+#        
+#    vActorsPaket = ''
+#    for vAKey in dictActors:
+#        vActorsPaket += '\n' + str(dictActors[vAKey].GetInfo(False, False))
+#        
+#    vGPIOStatus = ''
+##    vGPIOStatus += '\n Relais: ' + str(RadiatorStarted) + ' (' + str(RelayIN1.isOn) + '|' + str(RelayIN2.isOn) + ')'
+#    vGPIOStatus += '\n Code:   ' + str(timeDuration) + ';' + str(counterHigh) + ';' + str(counterLow)
+##    vGPIOStatus += '\n LED:    ' + str(LedG.isOn) + str(LedY.isOn) + str(LedR.isOn)
+#    vReturnText = vHeader + vNow + vSensorPaket + vActorsPaket + vGPIOStatus  # + str(dictActors)
+#    return vReturnText
+    
+## print CSV
+#def getInfoCSV():
+#    vReturnText = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S') + ';'
+#    vReturnText = vReturnText + str(RadiatorStarted) + ';'
+#    vReturnText = vReturnText + str(timeDuration) + ';' + str(counterHigh) + ';' + str(counterLow) + ";"
+##    vReturnText = vReturnText + str(RelayIN1.isOn) + str(RelayIN2.isOn) + ";"
+##    vReturnText = vReturnText + str(LedG.isOn) + str(LedY.isOn) + str(LedR.isOn) + ";"
+#    for vKey in dictSensors:
+#        vReturnText = vReturnText + str(dictSensors[vKey].GetInfo(True, False))
+#        
+#    return vReturnText
 
 # print html status output
 def getHTML():
-   vhttpResult = ''
-   vhttpResult += 'echo "<DIV class=\\"sensor\\"><TABLE class=\\"sensor\\"><TR>\\n";\n'
-   vhttpResult += 'echo "<TD>\\n";\n'
-   for vKey in dictSensors:
-       vhttpResult += dictSensors[vKey].GetHttpTable()
-       
-   vhttpResult += 'echo "</TD>\\n";\n'
-   vhttpResult += 'echo "<TD>\\n";\n'
-   
-   for vKey in dictActiveModules:
-       if vKey <> 'time':
+    vhttpResult = ''
+#   vhttpResult += 'echo "<DIV class=\\"sensor\\"><TABLE class=\\"sensor\\"><TR>\\n";\n'
+#   vhttpResult += 'echo "<TD>\\n";\n'
+#   for vKey in dictSensors:
+#       vhttpResult += dictSensors[vKey].GetHttpTable()
+#       
+#   vhttpResult += 'echo "</TD>\\n";\n'
+#   vhttpResult += 'echo "<TD>\\n";\n'
+#   
+#   for vKey in dictActiveModules:
+#       if vKey <> 'time':
+#           vhttpResult += dictActiveModules[vKey].GetHttpTable(vKey)
+#
+#   if modules_fritzactors:
+#       for vAKey in dictActors:
+#           vhttpResult += dictActors[vAKey].GetHttpTable()
+#       
+#   vhttpResult += 'echo "</TD></TR></TABLE></DIV>\\n";\n'
+    vhttpResult += 'echo "<DIV class=\\"sensor\\">\\n";\n'
+    for vKey in dictActiveModules:
+        if vKey <> 'time':
            vhttpResult += dictActiveModules[vKey].GetHttpTable(vKey)
-
-   if modules_fritzactors:
+    vhttpResult += 'echo "</DIV><DIV class=\\"sensor\\">\\n";\n'
+    for vKey in dictSensors:
+       vhttpResult += dictSensors[vKey].GetHttpTable()
+    vhttpResult += 'echo "</DIV><DIV class=\\"sensor\\">\\n";\n'
+    if modules_fritzactors:
        for vAKey in dictActors:
            vhttpResult += dictActors[vAKey].GetHttpTable()
-       
-   vhttpResult += 'echo "</TD></TR></TABLE></DIV>\\n";\n'
-   return vhttpResult
+    vhttpResult += 'echo "</DIV>\\n";\n'
+    return vhttpResult
 
+# print html status output
+def getCSVSensor():
+    vhttpResult = ''
+    for vKey in dictSensors:
+        vhttpResult += dictSensors[vKey].GetCSVInfo()
+        vhttpResult += '\n'
+    return vhttpResult 
+
+# print html status output
+def getCSVModules():
+    vhttpResult = ''
+    for vKey in dictActiveModules:
+        if vKey <> 'time':
+            vhttpResult += dictActiveModules[vKey].GetCSVInfo(vKey)
+            vhttpResult += '\n'
+    return vhttpResult 
+
+# print html status output
+def getCSVfa():
+    vhttpResult = ''
+    if modules_fritzactors:
+       for vAKey in dictActors:
+            vhttpResult += dictActors[vAKey].GetCSVInfo()
+            vhttpResult += '\n'            
+    return vhttpResult 
+ 
 # refresh for sensor data
 refreshTime_sensors = time.time() + INTERVAL_SENSORS
 # refresh for fritz actors
@@ -226,7 +265,8 @@ DiscoveryInProgress = False
 refreshTime_Queue = 5
 INTERVAL_QUEUE = 5
 refreshTime_webradioMotion = time.time() + webradio_motionTimeOut
-
+INTERVAL_BLOCKED = 20
+refresh_webradioblock = time.time() + INTERVAL_BLOCKED
 # FAInProgress = False
 # qFA = Queue.LifoQueue(maxsize=1)
 
@@ -325,14 +365,17 @@ while time.strftime('%H%M') < MAXTIME:  # timeDuration <= MAXTIME:
             if webradio_changed:
                 if webradio_active <> webradio_active1:
                     webradio_active = webradio_active1
-                sH_Log.Add(' Webradio change: ' + str(webradio_result))       
+                sH_Log.Add(' Webradio change: ' + str(webradio_result))      
+                if webradio_result == 'Stopped':
+                    webradioBlocked=True
+                    refresh_webradioblock = time.time() + INTERVAL_BLOCKED
         elif not modules_webradio and webradio_active:
             if vVerbose.startswith('test'):
                 print str(time.time())+'while: refreshTime_webradio: not modules_webradio, webradio_active'
             (webradio_active, webradio_changed, webradio_result) = threadWebradioService('/var/sensorTool/www/webradio.station', webradio_active, True)
             sH_Log.Add(' Webradio stopped')
 
-        if webradio_motionActive and not webradio_active and modules_webradio and modules_webradiomotion:
+        if webradio_motionActive and not webradio_active and modules_webradio and modules_webradiomotion and not webradioBlocked:
             if vVerbose.startswith('test'):
                 print str(time.time())+'while: refreshTime_webradio: webradio_motionActive, webradio_active, modules_webradio, modules_webradiomotion'    
             refreshTime_webradioMotion = time.time() + webradio_motionTimeOut
@@ -340,6 +383,10 @@ while time.strftime('%H%M') < MAXTIME:  # timeDuration <= MAXTIME:
             sH_Log.Add(' Webradio started')
         
         refreshTime_webradio = time.time() + INTERVAL_WEBRADIO
+
+    if webradioBlocked:
+        if time.time() > refresh_webradioblock:
+            webradioBlocked = False
 
     #print 'time '+str(time.time())+'>'+str(refreshTime_webradioMotion)+' refreshTime_webradioMotion'
     # Timeout for webradio - stop when no motion is detected (active motioncontrol)
@@ -571,7 +618,7 @@ while time.strftime('%H%M') < MAXTIME:  # timeDuration <= MAXTIME:
         # ############### Dynamic Config  Ende ###################
         
         if vBoolLC == True:
-            sendWhatsApps(dictSensors[iControlSensor].GetMobiles(), getInfoText("Active"))
+ #           sendWhatsApps(dictSensors[iControlSensor].GetMobiles(), getInfoText("Active"))
             sH_Log.Add('sensorTool started')
             #LedY.off()
             vBoolLC = False
@@ -652,21 +699,24 @@ while time.strftime('%H%M') < MAXTIME:  # timeDuration <= MAXTIME:
             #LedR.on()
             #LedY.off()
             RadiatorStarted = True
-            sendWhatsApps(dictSensors[iControlSensor].GetMobiles(), getInfoText("Started"))
+ #           sendWhatsApps(dictSensors[iControlSensor].GetMobiles(), getInfoText("Started"))
             sH_Log.Add('Radiator activated')
         elif (counterLow == TriggerCountB or vBoolInterval == False or modules_radiators == False or boolTriggerOutdoor == False) and RadiatorStarted:
             dictActors[dictSensors[iControlSensor].GetFritzActor()].SetActor(False)
             #LedR.off()
             #LedY.off()
             RadiatorStarted = False
-            sendWhatsApps(dictSensors[iControlSensor].GetMobiles(), getInfoText("Stopped"))
+   #         sendWhatsApps(dictSensors[iControlSensor].GetMobiles(), getInfoText("Stopped"))
             sH_Log.Add('Radiator deactivated')
             
         if vVerbose.startswith('test'):
             #print getInfoText("Status")
             print '##### - #####'
 
-        threadCreatePHPFile('/var/sensorTool/www/sensor.php', getHTML())
+        threadCreateFile('/var/sensorTool/www/sensor.php', getHTML())
+        threadCreateFile('/var/sensorTool/www/sensor7.csv', getCSVSensor(),  'csv')
+        threadCreateFile('/var/sensorTool/www/module7.csv', getCSVModules(),  'csv')
+        threadCreateFile('/var/sensorTool/www/fa7.csv', getCSVfa(),  'csv')
 #        thread.start_new_thread(threadCreatePHPFile, ('/var/sensorTool/www/sensor.php', getHTML(),))        
 
         plotting_DeviceValues(dictActiveModules,  '1_Modules',  vVerbose)
@@ -683,7 +733,7 @@ while time.strftime('%H%M') < MAXTIME:  # timeDuration <= MAXTIME:
 if RadiatorStarted:
     dictActors[dictSensors[iControlSensor].GetFritzActor()].SetActor(False)
 
-sendWhatsApps(dictSensors[iControlSensor].GetMobiles(), getInfoText("Inactive - going down"))
+#sendWhatsApps(dictSensors[iControlSensor].GetMobiles(), getInfoText("Inactive - going down"))
 if vVerbose.startswith('test'):
     print 'GPIO Down'
 #LedY.off()

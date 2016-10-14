@@ -41,12 +41,13 @@ foreach ($arrFiles as $vKey => $vValue)
     echo "</TD>\n";
     //echo $vKey."---".$vValue."<br />\n";
     $iCount =  $iCount + 1;
-    if ($iCount == 2 ) {
-        echo "</TR><TR>\n";
-        $iCount = 0;
-    }    
+#    if ($iCount == 2 ) {
+    echo "</TR><TR>\n";
+#        $iCount = 0;
+#    }    
 }
 
+echo "<td>h</td>\n";
 echo "</TR></table>\n";
 echo "</body>\n";
 ?>

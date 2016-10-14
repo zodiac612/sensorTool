@@ -31,6 +31,12 @@ class moduleDevice(object):
     def GetListValue(self):
         return self.__ListValue     
 
+    def GetCSVInfo(self,  sName):
+        result = str(sName) + ';';
+        result += str(datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'))[11:16] + ';';
+        result += str(str(self.__Value)) + ';';
+        return result
+
     def GetHttpTable(self,  sName):
         result = 'echo "'   
         result += '<DIV class=\\"sensor\\"><TABLE class=\\"sensor\\">'

@@ -119,38 +119,17 @@ class fritzActor(object):
         def GetMessage(self):
             return self.__message
         
-        def GetInfo(self, csv=True, lacrosse=False):
+        def GetCSVInfo(self, csv=True,  extended = False):
             result = ''
             if csv:
-                if lacrosse:
-                    vDict = {}
-                    vDict['name'] = self.__name
-                    vDict['time'] = self.__time
-                    vDict['state'] = self.__state
-                    vDict['mW'] = self.__power
-                    vDict['T'] = self.__temperature
-                    vDict['id'] = self.__id
-                    result = vDict
-                else:
-                    result = str(self.__name) + ';'
-                    result += str(self.__state) + ';'
-                    result += str(self.__time)[11:19] + ';'
-                    result += str(self.__temperature) + ';'
+                result = str(self.__name) + ';'
+                result += str(self.__time)[11:16] + ';'
+                result += str(self.__state) + ';'
+                result += str(self.__temperature) + ';'
+                result += str(self.GetPower()) + ';'
+                if extended:
                     result += str(self.GetTAvg()) + ';'
-                    result += str(self.GetPower()) + ';'
                     result += str(self.GetPowerAvg()()) + ';'
-
-            else:
-                result = str(self.__name) + ': '
-                result += str(self.__state) + ': '
-                result += str(self.__temperature) + 'C; '
-                if self.__temperature_avg is not None:
-                    result += str(self.GetTAvg()) + 'Cavg; '
-                result += str(self.GetPower()) + 'W; '
-                if self.__power_avg is not None:
-                    result += str(self.GetPowerAvg()) + 'Wavg '
-                result += '[' + str(self.__time)[11:19] + ']'
-               
             return result
         
         def GetHttpTable(self, bheader=True):

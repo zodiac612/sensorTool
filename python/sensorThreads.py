@@ -126,16 +126,25 @@ def threadFritzActors2():
 def threadPilightService(sArg):
     os.system("sudo service pilight " + sArg)
 
-def threadCreatePHPFile(sFileName,  sArg):
+def threadCreateFile(sFileName,  sArg,  type='php'):
     try:  
-        filecontent = '<?php\n'
-        filecontent += sArg
-        filecontent += '\n?>'
+        filecontent = ''
+        if type == 'php':
+            filecontent += '<?php\n'
+            filecontent += sArg
+            filecontent += '\n?>'
+        elif type == 'csv':
+            #print sFileName + '#' + sArg + '#' + type
+            filecontent += sArg
+            #filecontent += '\n'
+        else:
+            filecontent += 'wrong file type\n'
         fileHandle = open (sFileName, 'w')
         fileHandle.write (filecontent)
         fileHandle.close()
     except:
         pass
+   
 
 def threadWebradioService(sPathToConfig = '/var/sensorTool/www/webradio.station', webradio_active = False, boolStop = False,  boolStart = False):
     configRadio = ConfigParser.RawConfigParser()
@@ -145,7 +154,8 @@ def threadWebradioService(sPathToConfig = '/var/sensorTool/www/webradio.station'
     if not boolStop and not boolStart:
         if configRadio.getboolean('running', 'changed'):
             sArg = configRadio.get('running',  'action') + ' ' + configRadio.get('running',  'stream')+' '+configRadio.get('running',  'volume')
-            result = 'Action: ' + configRadio.get('running',  'action') + ', Stream: ' + configRadio.get('running',  'stream')+', Volume: '+configRadio.get('running',  'volume')
+#            result = 'Action: ' + configRadio.get('running',  'action') + ', Stream: ' + configRadio.get('running',  'stream')+', Volume: '+configRadio.get('running',  'volume')
+            result = 'Action: ' + configRadio.get('running',  'action') + ', Name: ' + configRadio.get('running',  'name')+', Volume: '+configRadio.get('running',  'volume')
             #print sArg
             os.system("/home/pi/sensorTool/sh/webradio.sh " + sArg +" &")
             webradio_changed = True
@@ -164,8 +174,9 @@ def threadWebradioService(sPathToConfig = '/var/sensorTool/www/webradio.station'
         webradio_active = True
         if configRadio.getboolean('running', 'changed'):
             configRadio.set('running', 'changed', False)
-            with open(str(sPathToConfig), 'wb') as configRadioFile:
-                configRadio.write(configRadioFile)
+        configRadio.set('running', 'action', 'start')
+        with open(str(sPathToConfig), 'wb') as configRadioFile:
+            configRadio.write(configRadioFile)
     else:
         os.system("/home/pi/sensorTool/sh/webradio.sh stop &")
         webradio_changed = True

@@ -85,6 +85,7 @@ echo "<input type=\"radio\" checked name=\"stream\" value=\"http://stream.radio8
 echo "<input type=\"radio\" name=\"stream\" value=\"http://87.230.53.43:8004\">Star FM 1</input><BR />";
 echo "<input type=\"radio\" name=\"stream\" value=\"http://91.250.82.237:8004\">Star FM 2</input><BR />";
 echo "<input type=\"radio\" name=\"stream\" value=\"http://8743.live.streamtheworld.com/CRP_MODAAC_SC\">Moda</input><BR />";
+echo "<input type=\"radio\" name=\"stream\" value=\"http://br-mp3-bayern3-m.akacast.akamaistream.net/7/442/142692/v1/gnl.akacast.akamaistream.net/br_mp3_bayern3_m\">Bayern 3</input><BR />";
 echo "	    <tr>\n";
 echo "	      <td colspan=\"2\" style=\"text-align: center;\">";
 echo "	         <input type=\"submit\" name=\"action\" value=\"start\">";

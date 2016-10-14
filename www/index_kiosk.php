@@ -6,6 +6,7 @@ echo "<html xmlns=\"http://www.w3.org/1999/xhtml\">\n";
 echo "<head>\n";
 echo "	<title>Raspberry PI Status</title>\n";
 echo "	<meta http-equiv=\"Content-Type\" content=\"text/html; charset=ISO-8859-15\" />\n";
+echo "  <meta http-equiv=\"refresh\" content=\"90\" >";
 echo "  <link rel=\"stylesheet\" href=\"stylesheet.css\">";
 echo "  <link rel=\"stylesheet\" href=\"styledisplay.css\">";
 echo "</head>\n";

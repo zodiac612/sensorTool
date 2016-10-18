@@ -72,7 +72,7 @@ class sensorHistory(object):
         def GetCSVLastMessage(self):
             result = str(self.__counterLog) + ';'
             result += str(self.__dictLog[self.__counterLog]['time'])[11:19] + ';'
-            result += str(self.__dictLog[self.__counterLog]['text'])[0:80] + ';'
+            result += str(self.__dictLog[self.__counterLog]['text'])[0:80].replace('\n', ' ') + ';'
             return result
 
 # vim: tabstop=8 expandtab shiftwidth=4 softtabstop=4

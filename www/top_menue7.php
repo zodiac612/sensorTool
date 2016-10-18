@@ -12,16 +12,13 @@ echo "        <input type=\"submit\" value=\"Schalter\" />\n";
 echo "      </form>\n";
 echo "    </TD>\n";
 echo "    <TD class=\"topmenu7\">\n";
-<<<<<<< HEAD
 echo "      <form action=\"http://raspberrypi3/overview.php\">\n";
-=======
 echo "      <form action=\"http://raspberrypi/slideshow.php\">\n";
 echo "        <input type=\"submit\" value=\"slideshow\" />\n";
 echo "      </form>\n";
 echo "    </TD>\n";
 echo "    <TD class=\"topmenu7\">\n";
 echo "      <form action=\"http://raspberrypi/overview.php\">\n";
->>>>>>> 555038b479c2ea1ee2671d3d2c955cabb3196976
 echo "        <input type=\"submit\" value=\"Diagramme\" />\n";
 echo "      </form>\n";
 echo "    </TD>\n";

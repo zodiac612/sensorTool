@@ -9,6 +9,17 @@ echo "	<meta http-equiv=\"Content-Type\" content=\"text/html; charset=ISO-8859-1
 echo "  <meta http-equiv=\"refresh\" content=\"90\" >";
 echo "  <link rel=\"stylesheet\" href=\"stylesheet.css\">";
 echo "  <link rel=\"stylesheet\" href=\"styledisplay.css\">";
+echo "  <script language=\"JavaScript\" type=\"text/javascript\">\n";
+echo "    function bildwechsel(Bildname)\n";
+echo "    {\n";
+echo "	  if(document.getElementById(Bildname).src.indexOf('1_Modules.png') == -1)\n";
+echo "      {\n";
+echo "         document.getElementById(Bildname).src = \"1_Modules.png\"\n";
+echo "      } else {\n";
+echo "         document.getElementById(Bildname).src = \"2_Absolute_Humidity.png\"\n";
+echo "      }\n";
+echo "    }\n";
+echo "  </script>\n";
 echo "</head>\n";
 echo "<body>\n";
 
@@ -31,7 +42,7 @@ echo "<div  class=\"stframe\">\n";
     echo "</div>\n";
     echo "<div  class=\"stright\">\n";
         echo "<div  class=\"stdiagAH\">\n";
-            echo "<img class=\"chart\" alt=2_Absolute_Humidity.png src=2_Absolute_Humidity.png />\n";
+            echo "<img class=\"chart\" src=2_Absolute_Humidity.png name=\"grafik\" id=\"grafik\" onClick=\"bildwechsel(this.name)\" />\n";
         echo "</div>\n";
         echo "<div  class=\"stmodules\">\n";
             include 'module7.php';

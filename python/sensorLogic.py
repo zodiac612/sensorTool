@@ -713,10 +713,10 @@ while time.strftime('%H%M') < MAXTIME:  # timeDuration <= MAXTIME:
             #print getInfoText("Status")
             print '##### - #####'
 
-        threadCreateFile('/var/sensorTool/www/sensor.php', getHTML())
-        threadCreateFile('/var/sensorTool/www/sensor7.csv', getCSVSensor(),  'csv')
-        threadCreateFile('/var/sensorTool/www/module7.csv', getCSVModules(),  'csv')
-        threadCreateFile('/var/sensorTool/www/fa7.csv', getCSVfa(),  'csv')
+        #threadCreateFile('/var/sensorTool/www/sensor.php', getHTML())
+        threadCreateFile('/var/sensorTool/www/sensor.csv', getCSVSensor(),  'csv')
+        threadCreateFile('/var/sensorTool/www/module.csv', getCSVModules(),  'csv')
+        threadCreateFile('/var/sensorTool/www/fa.csv', getCSVfa(),  'csv')
 #        thread.start_new_thread(threadCreatePHPFile, ('/var/sensorTool/www/sensor.php', getHTML(),))        
 
         plotting_DeviceValues(dictActiveModules,  '1_Modules',  vVerbose)

@@ -1,3 +1,4 @@
+#! /bin/sh
 ### BEGIN INIT INFO
 # Provides:          sensorTool
 # Required-Start:    $remote_fs $syslog

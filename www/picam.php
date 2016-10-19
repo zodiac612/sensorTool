@@ -1,6 +1,8 @@
 <?php
 error_reporting(E_ALL); ini_set('display_errors', '1');
 
+include 'conf.php';
+
 echo "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">\n";
 echo "<html xmlns=\"http://www.w3.org/1999/xhtml\">\n";
 echo "<head>\n";
@@ -10,6 +12,7 @@ echo "  <link rel=\"stylesheet\" href=\"stylesheet.css\">";
 echo "</head>\n";
 echo "<body bgcolor=\"#CCCCCC\">\n";
 
+$vMenueFrame = 'picam';
 include 'top_menue.php';
 include 'precheck.php';
 

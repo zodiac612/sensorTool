@@ -1,27 +1,95 @@
 <?php
-echo "<DIV class=\"sensor\"><TABLE class=\"sensor\"><TR>\n";
-echo "<TD>\n";
-echo "<DIV class=\"tx35dth\"><TABLE class=\"tx35dth\"><TR><TD class=\"tx35dthlabel\"><strong>S1</strong></TD><TD class=\"tx35dth\">T</TD><TD class=\"tx35dth\">RH</TD><TD class=\"tx35dth\">pa</TD></TR><TR><TD class=\"tx35dth\">-</TD><TD class=\"tx35dth\">-C</TD><TD class=\"tx35dth\">-%</TD><TD class=\"tx35dth\">966.47</TD></TR><TR><TD class=\"tx35dth\">AVG</TD><TD class=\"tx35dth\">-C</TD><TD class=\"tx35dth\">-%</TD><TD class=\"tx35dth\"><BR /></TD></TR></TABLE></DIV>\n";
-echo "<DIV class=\"tx35dth\"><TABLE class=\"tx35dth\"><TR><TD class=\"tx35dthlabel\"><strong>S2</strong></TD><TD class=\"tx35dth\">T</TD><TD class=\"tx35dth\">RH</TD><TD class=\"leer\"><BR /></TD></TR><TR><TD class=\"tx35dth\">-</TD><TD class=\"tx35dth\">-C</TD><TD class=\"tx35dth\">-%</TD><TD class=\"leer\"><BR /></TD></TR><TR><TD class=\"tx35dth\">AVG</TD><TD class=\"tx35dth\">-C</TD><TD class=\"tx35dth\">-%</TD><TD class=\"leer\"><BR /></TD></TR></TABLE></DIV>\n";
-echo "<DIV class=\"tx35dth\"><TABLE class=\"tx35dth\"><TR><TD class=\"tx35dthlabel\"><strong>S3</strong></TD><TD class=\"tx35dth\">T</TD><TD class=\"tx35dth\">RH</TD><TD class=\"leer\"><BR /></TD></TR><TR><TD class=\"tx35dth\">-</TD><TD class=\"tx35dth\">-C</TD><TD class=\"tx35dth\">-%</TD><TD class=\"leer\"><BR /></TD></TR><TR><TD class=\"tx35dth\">AVG</TD><TD class=\"tx35dth\">-C</TD><TD class=\"tx35dth\">-%</TD><TD class=\"leer\"><BR /></TD></TR></TABLE></DIV>\n";
-echo "<DIV class=\"tx35dth\"><TABLE class=\"tx35dth\"><TR><TD class=\"tx35dthlabel\"><strong>S4</strong></TD><TD class=\"tx35dth\">T</TD><TD class=\"tx35dth\">RH</TD><TD class=\"leer\"><BR /></TD></TR><TR><TD class=\"tx35dth\">-</TD><TD class=\"tx35dth\">-C</TD><TD class=\"tx35dth\">-%</TD><TD class=\"leer\"><BR /></TD></TR><TR><TD class=\"tx35dth\">AVG</TD><TD class=\"tx35dth\">-C</TD><TD class=\"tx35dth\">-%</TD><TD class=\"leer\"><BR /></TD></TR></TABLE></DIV>\n";
-echo "<DIV class=\"tx35dth\"><TABLE class=\"tx35dth\"><TR><TD class=\"tx35dthlabel\"><strong>S5</strong></TD><TD class=\"tx35dth\">T</TD><TD class=\"leer\"><BR /></TD><TD class=\"leer\"><BR /></TD></TR><TR><TD class=\"tx35dth\">-</TD><TD class=\"tx35dth\">-C</TD><TD class=\"leer\"><BR /></TD><TD class=\"leer\"><BR /></TD></TR><TR><TD class=\"tx35dth\">AVG</TD><TD class=\"tx35dth\">-C</TD><TD class=\"leer\"><BR /></TD><TD class=\"leer\"><BR /></TD></TR></TABLE></DIV>\n";
-echo "<DIV class=\"tx35dth\"><TABLE class=\"tx35dth\"><TR><TD class=\"tx35dthlabel\"><strong>S6</strong></TD><TD class=\"tx35dth\">T</TD><TD class=\"tx35dth\">RH</TD><TD class=\"leer\"><BR /></TD></TR><TR><TD class=\"tx35dth\">-</TD><TD class=\"tx35dth\">-C</TD><TD class=\"tx35dth\">-%</TD><TD class=\"leer\"><BR /></TD></TR><TR><TD class=\"tx35dth\">AVG</TD><TD class=\"tx35dth\">-C</TD><TD class=\"tx35dth\">-%</TD><TD class=\"leer\"><BR /></TD></TR></TABLE></DIV>\n";
-echo "</TD>\n";
-echo "<TD>\n";
-echo "<DIV class=\"sensor\"><TABLE class=\"sensor\"><TR>\n";
-echo "<TD class=\"sensorlabel\"><strong>GPIO</strong></TD>\n";
-echo "<TD class=\"sensor\">RELAIS</TD>\n";
-echo "<TD class=\"sensor\">LED</TD>\n";
-echo "</TR><TR>\n";
-echo "<TD class=\"sensor\">-</TD>\n";
-echo "<TD class=\"sensor\">-</TD>\n";
-echo "<TD class=\"sensor\">-</TD>\n";
-echo "</TR></TABLE></DIV>\n";
-echo "<BR \><BR \>\n";
-echo "<DIV class=\"fritzactor\"><TABLE class=\"fritzactor\"><TR><TD class=\"fritzactorlabel\"><strong>fa1</strong></TD><TD class=\"fritzactor\">state</TD><TD class=\"fritzactor\">T</TD><TD class=\"fritzactor\">W</TD></TR><TR><TD class=\"fritzactor\">-</TD><TD class=\"fritzactor\">-</TD><TD class=\"fritzactor\">-</TD><TD class=\"fritzactor\">-</TD></TR><TR><TD class=\"fritzactor\">avg</TD><TD class=\"leer\"><BR /></TD><TD class=\"fritzactor\">None</TD><TD class=\"fritzactor\">None</TD></TR></TABLE></DIV>\n";
-echo "<DIV class=\"fritzactor\"><TABLE class=\"fritzactor\"><TR><TD class=\"fritzactorlabel\"><strong>fa2</strong></TD><TD class=\"fritzactor\">state</TD><TD class=\"fritzactor\">T</TD><TD class=\"fritzactor\">W</TD></TR><TR><TD class=\"fritzactor\">-</TD><TD class=\"fritzactor\">-</TD><TD class=\"fritzactor\">-</TD><TD class=\"fritzactor\">-</TD></TR><TR><TD class=\"fritzactor\">avg</TD><TD class=\"leer\"><BR /></TD><TD class=\"fritzactor\">None</TD><TD class=\"fritzactor\">None</TD></TR></TABLE></DIV>\n";
-echo "<DIV class=\"fritzactor\"><TABLE class=\"fritzactor\"><TR><TD class=\"fritzactorlabel\"><strong>fa3</strong></TD><TD class=\"fritzactor\">state</TD><TD class=\"fritzactor\">T</TD><TD class=\"fritzactor\">W</TD></TR><TR><TD class=\"fritzactor\">-</TD><TD class=\"fritzactor\">-</TD><TD class=\"fritzactor\">-</TD><TD class=\"fritzactor\">-</TD></TR><TR><TD class=\"fritzactor\">avg</TD><TD class=\"leer\"><BR /></TD><TD class=\"fritzactor\">None</TD><TD class=\"fritzactor\">None</TD></TR></TABLE></DIV>\n";
-echo "</TD></TR></TABLE></DIV>\n";
+	$Counter = 0;
+	$Zeilen = 0;
+	
+// 	$AnzahlDerFelderList = 3;
+//	$AnzahlDerFelder = $AnzahlDerFelderList;
+//	$AnzahlNichtBenutzterFelder = 1;
+//	$WikiSpalte = 999;
+//	$MediaSpalte = 999; -->
+
+	// Einlesen der CSV(;) datei
+	$arrData = readFileToArray('sensor.csv');
+	$Zeilen = sizeof($arrData);
+	$AnzahlDerFelder = sizeof($arrData[0]) - 1;
+
+    //echo $Zeilen.'#'.$AnzahlDerFelder;
+	//debugShowArrayContent($arrData);
+
+  if ($vSensor_Frame == 'index') {
+	echo "<DIV class=\"sensor\"><TABLE class=\"sensor\"><TR>\n";
+	echo "<TD>\n";
+  }
+  echo "<TABLE class=\"sensor7\">\n";
+ // echo "<CAPTION>Sensor</CAPTION>\n";
+	
+	echo "<THEAD>\n";
+	echo "<TR>\n";
+	echo "<TH>Name</TH>\n";
+    echo "<TH>Zeit</TH>\n";
+    echo "<TH>T</TH>\n";
+    echo "<TH>RH</TH>\n";
+    echo "<TH>AH</TH>\n";
+	echo "</TR>\n";
+	echo "</THEAD>\n";
+	
+	echo "<TBODY>\n";
+	for($i = 0; $i < $Zeilen; $i++) {
+        echo "<TR>\n";
+        for($j = 0; $j < $AnzahlDerFelder; $j++ ) {
+            if ( $j > 0 ) {
+                $vClass="";
+                if ( $j == ($AnzahlDerFelder - 1) ) {
+                    if ( $arrData[$i][$j] < 9.8 ) {
+                        $vClass=" class=\"lightGreen\"";
+                    } else if ( $arrData[$i][$j] <= 11 ) {
+                        $vClass=" class=\"lightOrange\"";
+                    } else if ( $arrData[$i][$j] < 11 ) {
+                        $vClass=" class=\"lightRed\"";
+                    }
+                }
+                if ( $j == ($AnzahlDerFelder - 3) ) {
+                    if ( $arrData[$i][$j] < 4 ) {
+                        $vClass=" class=\"lightBlue\"";
+                    }else if (( $arrData[$i][$j] < 14 )){
+                        $vClass=" class=\"lightGreen\"";
+                    }else if (( $arrData[$i][$j] < 24 )){
+                        $vClass=" class=\"lightOrange\"" ;
+                    }else if (( $arrData[$i][$j] >= 24 )){
+                        $vClass=" class=\"lightRed\"" ;                        
+                    }
+                }
+                echo "<TD".$vClass.">".$arrData[$i][$j]."</TD>\n";
+            } else {
+                echo "<TD><strong>".$arrData[$i][$j]."</strong></TD>\n";
+            }
+        }
+		echo "</TR>\n";
+	}
+	echo "</TBODY>\n";
+	
+  echo "</TABLE>\n";
+  
+  if ($vSensor_Frame == 'index') {
+	echo "</TD>\n";
+	echo "<TD>\n";
+		echo "<DIV class=\"sensor\"><TABLE class=\"sensor\">\n";
+		echo "<TR>\n";
+		echo "<TD>\n";
+			include 'module.php';
+		echo "</TD>\n";
+		echo "</TR>\n";
+		echo "<TR>\n";
+		echo "<TD>\n";
+			include 'fa.php';
+		echo "</TD>\n";
+		echo "</TR>\n";
+		echo "</TABLE>\n";
+		echo "</DIV>\n";
+  	echo "</TD>\n";
+  	echo "</TR>\n";
+  	echo "</TABLE>\n";
+  }
+  
 
 ?>

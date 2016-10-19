@@ -1,5 +1,5 @@
 <?php
-    function debugShowArrayContent($arrData) {
+  function debugShowArrayContent($arrData) {
     echo count($arrData)."x".sizeof($arrData[0])."<BR>";
     for ( $i = 0; $i < sizeof($arrData); $i++ ) {
      for ( $j = 0; $j < sizeof($arrData[$i]); $j++) {

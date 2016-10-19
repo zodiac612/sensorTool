@@ -23,6 +23,7 @@ echo "  </script>\n";
 echo "</head>\n";
 echo "<body>\n";
 
+include 'conf.php';
 include 'functions.php';
 
 echo "<div  class=\"stframe\">\n";
@@ -31,13 +32,15 @@ echo "<div  class=\"stframe\">\n";
             echo "Raspberry PI SensorTool Status: ". date("d.m.Y",time())."\n";
         echo "</div>\n";
         echo "<div  class=\"stwebradio\">\n";
-            include 'webradio7.php';
+	  		$vWebFrame = 'rpidisplay';
+	  		include 'webradio_frame.php';
         echo "</div>\n";
         echo "<div  class=\"stsensor\">\n";
-            include 'sensor7.php';
+        	$vSensor_Frame = 'rpidisplay';
+            include 'sensor.php';
         echo "</div>\n";
         echo "<div  class=\"stfa\">\n";
-            include 'fa7.php';
+            include 'fa.php';
         echo "</div>\n";        
     echo "</div>\n";
     echo "<div  class=\"stright\">\n";
@@ -45,47 +48,21 @@ echo "<div  class=\"stframe\">\n";
             echo "<img class=\"chart\" src=2_Absolute_Humidity.png name=\"grafik\" id=\"grafik\" onClick=\"bildwechsel(this.name)\" />\n";
         echo "</div>\n";
         echo "<div  class=\"stmodules\">\n";
-            include 'module7.php';
+            include 'module.php';
         echo "</div>\n";
     echo "</div>\n";
     echo "<br style=\"clear:both;\" />\n";
     echo "<div  class=\"stbottom\">\n";
         echo "<div  class=\"stlink\">\n";
-            include 'top_menue7.php';
+	    	$vMenueFrame = 'rpidisplay';  
+	    	include 'top_menue.php';
         echo "</div>\n";
-//        echo "<br style=\"clear:both;\" />\n";
     echo "</div>\n";
     echo "<div  class=\"stbottom\">\n";
-//        echo "<div  class=\"stswitch\">\n";
-//            echo "<form action=\"http://raspberrypi/switch7.php\">\n";
-//                echo "<input type=\"submit\" value=\"Schalter\" />\n";
-//            echo "</form>\n";
-//        echo "</div>\n";
         echo "<div  class=\"sthistory\">\n";
             include 'loglatestentry7.php';
         echo "</div>\n";
     echo "</div>\n";
 echo "</div>\n";
-//include 'top_menue.php';
-//include 'precheck.php';
-
-//echo "<h4>Raspberry PI SensorTool Status: ". date("d.m.Y",time())."</h4>\n";
-//echo "<BR />\n";
-
-//2_Absolute_Humidity.png
-
-//include 'webradio_short.php';
-//if ( $boolLCL ) {
-//}
-//include 'loglatestentry.php';
-
-//echo "<BR />\n";
-
-//include 'sensor.php';
-
-//echo "<BR />\n";
-
-//include 'logdata.php';
-//echo"</div>\n";
 echo "</body>\n";
 ?>

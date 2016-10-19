@@ -1,6 +1,8 @@
 <?php
 error_reporting(E_ALL); ini_set('display_errors', '1');
 
+include 'conf.php';
+
 echo "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">\n";
 echo "<html xmlns=\"http://www.w3.org/1999/xhtml\">\n";
 echo "<head>\n";
@@ -10,6 +12,7 @@ echo "  <link rel=\"stylesheet\" href=\"stylesheet.css\">";
 echo "</head>\n";
 echo "<body bgcolor=\"#CCCCCC\">\n";
 
+$vMenueFrame = 'webradio';
 include 'top_menue.php';
 //include 'precheck.php';
 
@@ -81,11 +84,9 @@ echo "</td>\n";
 echo "	    <tr>\n";
 echo "			<td width=40%>Station</td>\n";
 echo "<td>\n";
-echo "<input type=\"radio\" checked name=\"stream\" value=\"http://stream.radio8.de:8000/live\">Radio 8</input><BR />";
-echo "<input type=\"radio\" name=\"stream\" value=\"http://87.230.53.43:8004\">Star FM 1</input><BR />";
-echo "<input type=\"radio\" name=\"stream\" value=\"http://91.250.82.237:8004\">Star FM 2</input><BR />";
-echo "<input type=\"radio\" name=\"stream\" value=\"http://8743.live.streamtheworld.com/CRP_MODAAC_SC\">Moda</input><BR />";
-echo "<input type=\"radio\" name=\"stream\" value=\"http://br-mp3-bayern3-m.akacast.akamaistream.net/7/442/142692/v1/gnl.akacast.akamaistream.net/br_mp3_bayern3_m\">Bayern 3</input><BR />";
+foreach ( $arrWebradio as $key => $element ) {
+	echo "<input type=\"radio\" name=\"stream\" value=\"".$element[2]."\">".$element[0]."</input><BR />";
+}
 echo "	    <tr>\n";
 echo "	      <td colspan=\"2\" style=\"text-align: center;\">";
 echo "	         <input type=\"submit\" name=\"action\" value=\"start\">";

@@ -46,19 +46,19 @@ else
             exit 1
         ;;
     esac
-    vPilightStatus=$(sudo service pilight status | awk -F' ' '{print $3}')
+#    vPilightStatus=$(sudo service pilight status | awk -F' ' '{print $3}')
     
-    #echo $vID
-    #echo $vUNIT
-    #echo $vZustand
-    #echo $vPilightStatus
+#    echo $vID
+#    echo $vUNIT
+#    echo $vZustand
+#    echo $vPilightStatus
         
-    if [ $vPilightStatus=="not" ]
-    then
+#    if [ $vPilightStatus=="not" ]
+#    then
         echo "Start PILIGHT"
         sudo service pilight start
         #sleep 5
-    fi
+#    fi
     
     echo "sudo pilight-send -p \"$vProtocol\" -i $vID -u $vUNIT $vAction"
     sudo pilight-send -p "$vProtocol" -i $vID -u $vUNIT $vAction

@@ -42,7 +42,7 @@ if ($result != "{}") {
     exec('/home/pi/webradio/updatewebradio.sh '.base64_encode($result));
     $arrConfig = readFileToArray($confFile);
 }
-var_dump($arrConfig);
+//var_dump($arrConfig);
 $configName="";
 $configAction="";
 
@@ -69,8 +69,9 @@ foreach ($arrConfig as $vKey => $vValue)
 
 echo "<DIV class=\"webradio7\">\n";
 echo "	  <table class=\"webradio7\">\n";// bgcolor=\"#FFFFFF\" Border=1>\n";
-
+echo "	    <tr>\n";
 foreach ( $arrWebradio as $key => $element ) {
+	#echo $key.'#'.var_dump($element);
 	$boolWebradioStationVisible = True;
 	if ( $vWebFrame == 'slideshow') {
 		$boolWebradioStationVisible = $element[4];
@@ -91,10 +92,11 @@ foreach ( $arrWebradio as $key => $element ) {
 		echo "    <input type=\"submit\" name=\"action\" value=\"".$element[0]."\"></input>";
 		echo "	</form>\n";
 		echo "</td>\n";		
-	}
-	if ( $vWebFrame == 'slideshow') {
-		echo "	    </tr>\n";
-		echo "	    <tr>\n";
+	
+		if ( $vWebFrame == 'slideshow') {
+			echo "	    </tr>\n";
+			echo "	    <tr>\n";
+		}
 	}
 }
 if ( $configAction == "stop") {

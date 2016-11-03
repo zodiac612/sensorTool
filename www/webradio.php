@@ -9,6 +9,7 @@ echo "<head>\n";
 echo "	<title>Raspberry PI Webradio</title>\n";
 echo "	<meta http-equiv=\"Content-Type\" content=\"text/html; charset=ISO-8859-15\" />\n";
 echo "  <link rel=\"stylesheet\" href=\"stylesheet.css\">";
+echo "  <link rel=\"stylesheet\" href=\"stylewebradio.css\">";
 echo "</head>\n";
 echo "<body bgcolor=\"#CCCCCC\">\n";
 

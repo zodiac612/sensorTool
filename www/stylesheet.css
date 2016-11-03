@@ -168,23 +168,6 @@ td.leer{
     border: none;
     width: 12℅;
 }
-div.webradio7 {
-    border: none;
-    }
-table.webradio7{
-    border: none; /*1px solid #000000;*/
-    }
-td.webradio7 {
-    border: none;
-    }
-td.webradio7start {
-    border: 1px solid #99ff99;
-    background-color: #99ff99;	
-    }
- td.webradio7stop {
-    border: 1px solid #ff9999;
-    background-color: #ff9999;	
-    } 
 .lightOrange {
     background-color: #ffff99;
 }

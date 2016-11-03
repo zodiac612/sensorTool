@@ -1,0 +1,22 @@
+body {
+	background-color: #000000;
+    margin: 2px;
+    padding: 0px;
+}
+
+div {
+    margin: 0px;
+    padding: 0px;    
+    }
+
+div.stframe {
+}
+
+div.stpics {
+}
+
+div.stinfo {
+}
+.stinfoAlarm {
+    background-color: #ff9999;
+}

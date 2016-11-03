@@ -2,11 +2,18 @@
 switch ($vMenueFrame) {
 	case 'slideshow':
 		
+		echo "<div>\n";
 		echo "  <form action=\"http://".SENSORTOOLSERVER."/index_kiosk.php\">\n";
 		echo "    <input type=\"submit\" value=\"Home\" />\n";
 		echo "  </form>\n";
 		echo "</div>\n";
+		echo "<div style=\"margin-top: 2px;\">\n";
+		echo "  <form action=\"http://".SENSORTOOLSERVER."/slideshow.php\">\n";
+		echo "    <input type=\"submit\" value=\"Refresh\" />\n";
+		echo "  </form>\n";
+		echo "</div>\n";
 		break;
+		
 	default:
 		$vtmStyle = 'topmenu';
 		if ( $vMenueFrame == 'rpidisplay') {

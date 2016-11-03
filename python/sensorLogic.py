@@ -717,6 +717,10 @@ while time.strftime('%H%M') < MAXTIME:  # timeDuration <= MAXTIME:
         threadCreateFile('/var/sensorTool/www/sensor.csv', getCSVSensor(),  'csv')
         threadCreateFile('/var/sensorTool/www/module.csv', getCSVModules(),  'csv')
         threadCreateFile('/var/sensorTool/www/fa.csv', getCSVfa(),  'csv')
+        strAlarm = 'False'
+        if boolInfoLight:
+            strAlarm = 'True'
+        threadCreateFile('/var/sensorTool/www/alarm.csv', strAlarm,  'csv')
 #        thread.start_new_thread(threadCreatePHPFile, ('/var/sensorTool/www/sensor.php', getHTML(),))        
 
         plotting_DeviceValues(dictActiveModules,  '1_Modules',  vVerbose)

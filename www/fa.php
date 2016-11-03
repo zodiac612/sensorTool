@@ -31,9 +31,9 @@
                     }
                 }
                 if ( $j == ($AnzahlDerFelder - 1) ) {
-                    if ( $arrData[$i][$j] > 0 ) {
+                    if ( $arrData[$i][$j] < 5.5 ) {
                         $vClass=" class=\"lightGreen\"";
-                    }else if (( $arrData[$i][$j] > 5.5 )){
+                    }else if (( $arrData[$i][$j] <= 10.5 )){
                         $vClass=" class=\"lightOrange\"";
                     }else if (( $arrData[$i][$j] > 10.5 )){
                         $vClass=" class=\"lightRed\"";

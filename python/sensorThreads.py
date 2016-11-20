@@ -132,7 +132,7 @@ def threadCreateFile(sFileName,  sArg,  type='php'):
         if type == 'php':
             filecontent += '<?php\n'
             filecontent += sArg
-            filecontent += '\n?>'
+            filecontent += '\n?>\n'
         elif type == 'csv':
             #print sFileName + '#' + sArg + '#' + type
             filecontent += sArg
@@ -142,7 +142,8 @@ def threadCreateFile(sFileName,  sArg,  type='php'):
         fileHandle = open (sFileName, 'w')
         fileHandle.write (filecontent)
         fileHandle.close()
-    except:
+    except Exception as e:
+        print str(e)
         pass
    
 

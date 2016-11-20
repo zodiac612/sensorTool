@@ -74,22 +74,22 @@ foreach ( $arrWebradio as $key => $element ) {
 	#echo $key.'#'.var_dump($element);
 	$boolWebradioStationVisible = True;
 	if ( $vWebFrame == 'slideshow') {
-		$boolWebradioStationVisible = $element[4];
+		$boolWebradioStationVisible = $element[6];
 	} else {
-		$boolWebradioStationVisible = $element[3];
+		$boolWebradioStationVisible = $element[5];
 	}
 	
 	if ( $boolWebradioStationVisible ) {
-		if ( $configName == $element[0]) {
+		if ( $configName == $element[2]) {
 		    echo "<td class=\"webradio7start\">\n";
 		} else {
     		echo "<td class=\"webradio7\">\n";
 		}
-		echo "	<form method=\"post\">\n";
-		echo "    <input type=\"hidden\" name=\"volume\" value=\"".$element[1]."\"></input>";
-		echo "    <input type=\"hidden\" name=\"name\" value=\"".$element[0]."\"></input>";
-		echo "    <input type=\"hidden\" name=\"stream\" value=\"".$element[2]."\"></input>";
-		echo "    <input type=\"submit\" name=\"action\" value=\"".$element[0]."\"></input>";
+        echo "	<form action=\"webradio_change.php\" method=\"post\" target=\"hidden-form\">\n";
+		echo "    <input type=\"hidden\" name=\"volume\" value=\"".$element[3]."\"></input>";
+		echo "    <input type=\"hidden\" name=\"name\" value=\"".$element[2]."\"></input>";
+		echo "    <input type=\"hidden\" name=\"stream\" value=\"".$element[4]."\"></input>";
+		echo "    <input type=\"submit\" name=\"action\" value=\"".$element[2]."\"></input>";
 		echo "	</form>\n";
 		echo "</td>\n";		
 	
@@ -104,8 +104,8 @@ if ( $configAction == "stop") {
 } else {
     echo "<td class=\"webradio7\">\n";
 }
-echo "	<form method=\"post\">\n";
-echo "	  <input type=\"submit\" name=\"action\"value=\"stop\">";
+echo "	<form action=\"webradio_change.php\" method=\"post\" target=\"hidden-form\">\n";
+echo "	  <input type=\"submit\" name=\"action\" value=\"stop\">";
 echo "	</form>\n";
 echo "</td>\n";
 echo "	    </tr>\n";

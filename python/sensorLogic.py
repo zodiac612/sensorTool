@@ -24,6 +24,7 @@ from sensorThreads import threadCreateFile #ok
 from sensorThreads import threadWebradioService
 from sensorSwitches import sensorSwitches
 from sensorDevice import moduleDevice
+from sensorPHPConf import sensorPHPConf
 #from sensorService import threadSensors
 
 import Queue
@@ -33,6 +34,7 @@ if vVerbose.startswith('test'):
     print 'sensorService starting'
 sConfig = sensorConfig('/home/pi/sensorTool/sensorTool.conf', vVerbose)
 sensorSwitches('/home/pi/sensorTool/switches.conf', vVerbose);
+sensorPHPConf(vVerbose);
 
 # GPIO Settings BCM Layout
 #RelayIN1 = gpio.GPIOout(sConfig.getGPIORelayIN1())
@@ -247,10 +249,21 @@ def getCSVfa():
             vhttpResult += dictActors[vAKey].GetCSVInfo()
             vhttpResult += '\n'            
     return vhttpResult 
+
+def threadRequestAlarm():
+    #requests.get("http://" + SERVER + ":24321")
+    requests.get("http://" + SERVER + ":6876")
+ 
+def threadSwitchAlarm(bStart=True):
+    if bStart:
+        os.system('sudo /home/pi/sensorTool/sh/pilightservice.sh intertechno_switch 19524338 1 1');
+    else:
+        os.system('sudo /home/pi/sensorTool/sh/pilightservice.sh intertechno_switch 19524338 1 0');
+ 
  
 # refresh for sensor data
 refreshTime_sensors = time.time() + INTERVAL_SENSORS
-# refresh for fritz actors
+# refresh for fritz actors 
 refreshTime_fritzactors = time.time()
 
 refreshTime_webradio = time.time()
@@ -417,7 +430,7 @@ while time.strftime('%H%M') < MAXTIME:  # timeDuration <= MAXTIME:
                     line = " "
                     while line:
                         line = handle.readline()
-                        print line
+                        #print line
                         if len(line) > 0:
                             dictResponse = ast.literal_eval(line)
                     handle.close()
@@ -432,7 +445,7 @@ while time.strftime('%H%M') < MAXTIME:  # timeDuration <= MAXTIME:
                 # print vR
                 dictResponse = ast.literal_eval(str(vR))
 
-            print 'dictResponse: ' + str(dictResponse) 
+            #print 'dictResponse: ' + str(dictResponse) 
             for vSensor in dictResponse:
                 dictTemp = {}
                 dictTemp['ID'] = vSensor
@@ -460,14 +473,14 @@ while time.strftime('%H%M') < MAXTIME:  # timeDuration <= MAXTIME:
                 # if motion detected than increase refreshTime_webradioMotion by webradio_motionTimeOut
                     webradio_motionActive = True
                     refreshTime_webradioMotion = time.time() + webradio_motionTimeOut
-                    print refreshTime_webradioMotion
+                    #print refreshTime_webradioMotion
                 else:
                     
                     # no motion detected, but mobile device present, webradio must be acticve
                     if modules_LANDevices and LANDevices_Present:
                         webradio_motionActive = True
                         refreshTime_webradioMotion = time.time() + webradio_motionTimeOut
-                        print refreshTime_webradioMotion                       
+                        #print refreshTime_webradioMotion                       
                     else:
                         webradio_motionActive = False
              
@@ -688,11 +701,16 @@ while time.strftime('%H%M') < MAXTIME:  # timeDuration <= MAXTIME:
                         
         if boolInfoLight:
             if not boolLeuchte:
-                boolLeuchte = Leuchte.activate(boolLeuchte)
+                #boolLeuchte = Leuchte.activate(boolLeuchte)
+                thread.start_new_thread(threadSwitchAlarm, (True, ))
+                thread.start_new_thread(threadRequestAlarm, ())
+                boolLeuchte = True
                 ledalarm = True
         else:
             if boolLeuchte:
-                boolLeuchte = Leuchte.deactivate(boolLeuchte)
+                #boolLeuchte = Leuchte.deactivate(boolLeuchte)
+                thread.start_new_thread(threadSwitchAlarm, (False, ))
+                boolLeuchte = False
                 
         if counterHigh == TriggerCountA and RadiatorStarted == False and vBoolInterval and modules_radiators and boolTriggerOutdoor:
             dictActors[dictSensors[iControlSensor].GetFritzActor()].SetActor(True)
@@ -718,8 +736,12 @@ while time.strftime('%H%M') < MAXTIME:  # timeDuration <= MAXTIME:
         threadCreateFile('/var/sensorTool/www/module.csv', getCSVModules(),  'csv')
         threadCreateFile('/var/sensorTool/www/fa.csv', getCSVfa(),  'csv')
         strAlarm = 'False'
-        if boolInfoLight:
+        if boolLeuchte:
             strAlarm = 'True'
+            #thread.start_new_thread(threadRequestAlarm, ())
+            if vVerbose.startswith('test'):
+                print 'Alarm triggered'
+
         threadCreateFile('/var/sensorTool/www/alarm.csv', strAlarm,  'csv')
 #        thread.start_new_thread(threadCreatePHPFile, ('/var/sensorTool/www/sensor.php', getHTML(),))        
 
@@ -730,6 +752,10 @@ while time.strftime('%H%M') < MAXTIME:  # timeDuration <= MAXTIME:
         plotting_DeviceValues(dictPressure, '9_Pressure',  vVerbose,  700,  1100)
         
 #        thread.start_new_thread(plotting, (dictPlotSens, dictPlotAussen, vVerbose,))
+          
+        if vVerbose.startswith('test'):
+            #print getInfoText("Status")
+            print '##### - #####'
           
         refreshTime_sensors = time.time() + INTERVAL_SENSORS
     sleep(1) # 0.1

@@ -70,6 +70,9 @@ $vRandomLayout = mt_rand(1, 10);
 	  echo "<br />\n";
 	  	$vWebFrame = 'slideshow';
 	    include 'webradio_frame.php';
+        echo "<br />\n";
+        $vSwitchFrame = 'slidshow';
+        include 'switch_frame.php';
 	  echo "</div>\n";
 	echo "</div>\n";
   if ( $vRandomLayout > 5) {
@@ -78,6 +81,8 @@ $vRandomLayout = mt_rand(1, 10);
 	echo "</div>\n";
   }  
   echo "</div>\n";
+  
+  echo "<IFRAME style=\"display:none\" name=\"hidden-form\"></IFRAME>\n";
 
 echo "</body>\n";
 ?>

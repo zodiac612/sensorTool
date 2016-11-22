@@ -12,25 +12,27 @@ def sensorSwitches(PathToConfig='/home/pi/sensorTool/switches.conf', vVerbose='s
     dictGroups = {}
     GroupCount = 0
     for vSec in config.sections():
-        vGroup = config.get(vSec,  'group')
-        boolDings = False
-        for vGi in dictGroups:
-            if dictGroups[vGi]['name'] == vGroup:
-                boolDings = True
-            
-        if not boolDings:
-            GroupCount = GroupCount + 1
-            dictGroup = {}
-            dictGroup['name'] = vGroup
-            dictGroup['switches'] = None
-            dictGroups[GroupCount] = dictGroup
-    #print dictGroups
+	if vSec[:6] == 'Switch':
+            vGroup = config.get(vSec,  'group')
+            boolDings = False
+            for vGi in dictGroups:
+                if dictGroups[vGi]['name'] == vGroup:
+                    boolDings = True
+                
+            if not boolDings:
+                GroupCount = GroupCount + 1
+                dictGroup = {}
+                dictGroup['name'] = vGroup
+                dictGroup['switches'] = None
+                dictGroups[GroupCount] = dictGroup
+        #print dictGroups
 
     for vKGroup in dictGroups:
         #print str(vKGroup) + " " + str(dictGroups[vKGroup]['name'])
         dictSwitches = {}
         CountSwitch = 0
         for vSec in config.sections():
+	  if vSec[:6] == 'Switch':
             vGroup = config.get(vSec,  'group')
             if dictGroups[vKGroup]['name'] == vGroup:
                 CountSwitch = CountSwitch + 1

@@ -29,6 +29,7 @@ case "$1" in
 		chown -R pi.pi /var/sensorTool/www
 		chmod 666 /var/sensorTool/www/dynamic.conf
 		chmod 666 /var/sensorTool/www/webradio.station
+		chmod 666 /var/sensorTool/www/switchstate.csv
                 ln -s /home/pi/pics/ /var/sensorTool/www/pcis
 		sleep 2
 		service apache2 restart

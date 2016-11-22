@@ -1,0 +1,147 @@
+<?php
+echo "  <table class=\"switch\">\n";
+echo "    <th>LED</th>\n";
+echo "    <tr>\n";
+echo "      <td class=\"switchlabel\">TV</td>\n";
+echo "      <td class=\"switch\">\n";
+echo "        <form class=\"switch\" method=\"post\">\n";
+echo "          <input type=\"hidden\" name=\"SwitchID\" value=\"19524338\">\n";
+echo "          <input type=\"hidden\" name=\"SwitchUnit\" value=\"1\">\n";
+echo "          <input type=\"hidden\" name=\"SwitchProtocol\" value=\"intertechno_switch\">\n";
+echo "	        <button class=\"switch\" type=\"submit\" name=\"SwitchAction\" value=\"1\">An</button>\n";
+echo "          <button class=\"switch\" type=\"submit\" name=\"SwitchAction\" value=\"0\">Aus</button>\n";
+echo "        </form>\n";
+echo "      </td>\n";
+echo "    <tr>\n";
+echo "      <td class=\"switchlabel\">Schrank</td>\n";
+echo "      <td class=\"switch\">\n";
+echo "        <form class=\"switch\" method=\"post\">\n";
+echo "          <input type=\"hidden\" name=\"SwitchID\" value=\"19524338\">\n";
+echo "          <input type=\"hidden\" name=\"SwitchUnit\" value=\"2\">\n";
+echo "          <input type=\"hidden\" name=\"SwitchProtocol\" value=\"intertechno_switch\">\n";
+echo "	        <button class=\"switch\" type=\"submit\" name=\"SwitchAction\" value=\"1\">An</button>\n";
+echo "          <button class=\"switch\" type=\"submit\" name=\"SwitchAction\" value=\"0\">Aus</button>\n";
+echo "        </form>\n";
+echo "      </td>\n";
+echo "	  </tr>\n";
+echo "	</table>
+";
+echo "	<br />
+";
+echo "  <table class=\"switch\">\n";
+echo "    <th>media</th>\n";
+echo "    <tr>\n";
+echo "      <td class=\"switchlabel\">TV</td>\n";
+echo "      <td class=\"switch\">\n";
+echo "        <form class=\"switch\" method=\"post\">\n";
+echo "          <input type=\"hidden\" name=\"SwitchID\" value=\"19524338\">\n";
+echo "          <input type=\"hidden\" name=\"SwitchUnit\" value=\"0\">\n";
+echo "          <input type=\"hidden\" name=\"SwitchProtocol\" value=\"intertechno_switch\">\n";
+echo "	        <button class=\"switch\" type=\"submit\" name=\"SwitchAction\" value=\"1\">An</button>\n";
+echo "          <button class=\"switch\" type=\"submit\" name=\"SwitchAction\" value=\"0\">Aus</button>\n";
+echo "        </form>\n";
+echo "      </td>\n";
+echo "    <tr>\n";
+echo "      <td class=\"switchlabel\">AmazonFireTV</td>\n";
+echo "      <td class=\"switch\">\n";
+echo "        <form class=\"switch\" method=\"post\">\n";
+echo "          <input type=\"hidden\" name=\"SwitchID\" value=\"658476\">\n";
+echo "          <input type=\"hidden\" name=\"SwitchUnit\" value=\"3\">\n";
+echo "          <input type=\"hidden\" name=\"SwitchProtocol\" value=\"quigg_gt9000\">\n";
+echo "	        <button class=\"switch\" type=\"submit\" name=\"SwitchAction\" value=\"1\">An</button>\n";
+echo "          <button class=\"switch\" type=\"submit\" name=\"SwitchAction\" value=\"0\">Aus</button>\n";
+echo "        </form>\n";
+echo "      </td>\n";
+echo "    <tr>\n";
+echo "      <td class=\"switchlabel\">Wii</td>\n";
+echo "      <td class=\"switch\">\n";
+echo "        <form class=\"switch\" method=\"post\">\n";
+echo "          <input type=\"hidden\" name=\"SwitchID\" value=\"658476\">\n";
+echo "          <input type=\"hidden\" name=\"SwitchUnit\" value=\"10\">\n";
+echo "          <input type=\"hidden\" name=\"SwitchProtocol\" value=\"quigg_gt9000\">\n";
+echo "	        <button class=\"switch\" type=\"submit\" name=\"SwitchAction\" value=\"1\">An</button>\n";
+echo "          <button class=\"switch\" type=\"submit\" name=\"SwitchAction\" value=\"0\">Aus</button>\n";
+echo "        </form>\n";
+echo "      </td>\n";
+echo "	  </tr>\n";
+echo "	</table>
+";
+echo "	<br />
+";
+echo "  <table class=\"switch\">\n";
+echo "    <th>GT_7000</th>\n";
+echo "    <tr>\n";
+echo "      <td class=\"switchlabel\">GT_7000_1</td>\n";
+echo "      <td class=\"switch\">\n";
+echo "        <form class=\"switch\" method=\"post\">\n";
+echo "          <input type=\"hidden\" name=\"SwitchID\" value=\"301\">\n";
+echo "          <input type=\"hidden\" name=\"SwitchUnit\" value=\"0\">\n";
+echo "          <input type=\"hidden\" name=\"SwitchProtocol\" value=\"quigg_gt7000\">\n";
+echo "	        <button class=\"switch\" type=\"submit\" name=\"SwitchAction\" value=\"1\">An</button>\n";
+echo "          <button class=\"switch\" type=\"submit\" name=\"SwitchAction\" value=\"0\">Aus</button>\n";
+echo "        </form>\n";
+echo "      </td>\n";
+echo "    <tr>\n";
+echo "      <td class=\"switchlabel\">GT_7000_2</td>\n";
+echo "      <td class=\"switch\">\n";
+echo "        <form class=\"switch\" method=\"post\">\n";
+echo "          <input type=\"hidden\" name=\"SwitchID\" value=\"301\">\n";
+echo "          <input type=\"hidden\" name=\"SwitchUnit\" value=\"1\">\n";
+echo "          <input type=\"hidden\" name=\"SwitchProtocol\" value=\"quigg_gt7000\">\n";
+echo "	        <button class=\"switch\" type=\"submit\" name=\"SwitchAction\" value=\"1\">An</button>\n";
+echo "          <button class=\"switch\" type=\"submit\" name=\"SwitchAction\" value=\"0\">Aus</button>\n";
+echo "        </form>\n";
+echo "      </td>\n";
+echo "	  </tr>\n";
+echo "	</table>
+";
+echo "	<br />
+";
+echo "  <table class=\"switch\">\n";
+echo "    <th>Control</th>\n";
+echo "    <tr>\n";
+echo "      <td class=\"switchlabel\">Vornado</td>\n";
+echo "      <td class=\"switch\">\n";
+echo "        <form class=\"switch\" method=\"post\">\n";
+echo "          <input type=\"hidden\" name=\"SwitchID\" value=\"658476\">\n";
+echo "          <input type=\"hidden\" name=\"SwitchUnit\" value=\"7\">\n";
+echo "          <input type=\"hidden\" name=\"SwitchProtocol\" value=\"quigg_gt9000\">\n";
+echo "	        <button class=\"switch\" type=\"submit\" name=\"SwitchAction\" value=\"1\">An</button>\n";
+echo "          <button class=\"switch\" type=\"submit\" name=\"SwitchAction\" value=\"0\">Aus</button>\n";
+echo "        </form>\n";
+echo "      </td>\n";
+echo "    <tr>\n";
+echo "      <td class=\"switchlabel\">radiators</td>\n";
+echo "      <td class=\"switch\">\n";
+echo "        <form class=\"switch\" method=\"post\">\n";
+echo "          <input type=\"hidden\" name=\"SwitchID\" value=\"087610073786\">\n";
+echo "          <input type=\"hidden\" name=\"SwitchProtocol\" value=\"fritzactor\">\n";
+echo "	        <button class=\"switch\" type=\"submit\" name=\"SwitchAction\" value=\"1\">An</button>\n";
+echo "          <button class=\"switch\" type=\"submit\" name=\"SwitchAction\" value=\"0\">Aus</button>\n";
+echo "        </form>\n";
+echo "      </td>\n";
+echo "	  </tr>\n";
+echo "	</table>
+";
+echo "	<br />
+";
+echo "  <table class=\"switch\">\n";
+echo "    <th>GT_9000</th>\n";
+echo "    <tr>\n";
+echo "      <td class=\"switchlabel\">rpi display</td>\n";
+echo "      <td class=\"switch\">\n";
+echo "        <form class=\"switch\" method=\"post\">\n";
+echo "          <input type=\"hidden\" name=\"SwitchID\" value=\"658476\">\n";
+echo "          <input type=\"hidden\" name=\"SwitchUnit\" value=\"13\">\n";
+echo "          <input type=\"hidden\" name=\"SwitchProtocol\" value=\"quigg_gt9000\">\n";
+echo "	        <button class=\"switch\" type=\"submit\" name=\"SwitchAction\" value=\"1\">An</button>\n";
+echo "          <button class=\"switch\" type=\"submit\" name=\"SwitchAction\" value=\"0\">Aus</button>\n";
+echo "        </form>\n";
+echo "      </td>\n";
+echo "	  </tr>\n";
+echo "	</table>
+";
+echo "	<br />
+";
+
+?>

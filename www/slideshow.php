@@ -70,10 +70,10 @@ $vRandomLayout = mt_rand(1, 10);
 	  echo "<br />\n";
 	  	$vWebFrame = 'slideshow';
 	    include 'webradio_frame.php';
-        echo "<br />\n";
-        $vSwitchFrame = 'slidshow';
+      echo "<br />\n";
+        $vSwitchFrame='slideshow';
         include 'switch_frame.php';
-	  echo "</div>\n";
+//	  echo "</div>\n";
 	echo "</div>\n";
   if ( $vRandomLayout > 5) {
 	echo "<div style=\"float:both\" class=\"stpics\">\n";

@@ -49,4 +49,26 @@
   	}
     return $arrFiles; 
   }
+  
+    function writeFileFromArray($File, $arrData) {
+        // Param String $File (Pfad zur Datei)
+        // Param String $arrData Array
+        $result = "";
+        //var_dump($arrData);
+        for ( $i = 0; $i < sizeof($arrData); $i++ ) {
+            $vLine = "";
+            for ( $j = 0; $j < sizeof($arrData[$i])-1; $j++) {
+                //echo $arrData[$i][$j].";";
+                $vLine =  $vLine.$arrData[$i][$j].";";
+            }
+            //echo "<BR />".$vLine."<BR />";
+            $result = $result.$vLine."\n";
+        }
+        //echo $result."<BR />\n";
+
+        $datei = fopen($File,"w");
+        echo fwrite($datei, $result);
+        fclose($datei);
+    }
+  
 ?>

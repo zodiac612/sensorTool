@@ -12,24 +12,39 @@ def sensorPHPConf(vVerbose='start'):
     config.read(PathToSwitchesConfig)
 
     dictSwitches = {}
+    dictGroups = {}
     countSwitches = 0
+    countSwitchGroups = 0
     for vSec in config.sections():
-        dictSwitch = {}
-        dictSwitch['switch'] = vSec
-        dictSwitch['protocol'] =  config.get(vSec,  'protocol')
-        dictSwitch['name'] =  config.get(vSec,  'name')
-        dictSwitch['id'] =  config.getint(vSec,  'id')
-        try: dictSwitch['unit'] =  config.getint(vSec,  'unit')
-        except:  dictSwitch['unit'] =  None
-        dictSwitch['group'] =  config.get(vSec,  'group')
-        try: dictSwitch['switchgroup'] = config.get(vSec,  'switchgroup')
-        except: dictSwitch['switchgroup'] = None
-        try: dictSwitch['alarm'] =  config.getboolean(vSec,  'alarm')
-        except: dictSwitch['alarm'] =  False
-        try: dictSwitch['slideshow'] =  config.getboolean(vSec,  'slideshow')
-        except: dictSwitch['slideshow'] =  False        
-        dictSwitches[countSwitches] = dictSwitch
-        countSwitches = countSwitches + 1
+        if vSec[:5] == 'Group':
+            dictGroup = {}
+            dictGroup['group'] = vSec
+            dictGroup['switchgroup'] = config.get(vSec,  'switchgroup')
+            try: dictGroup['slideshow'] =  config.getboolean(vSec,  'slideshow')
+            except: dictGroup['slideshow'] =  False       
+            try: dictGroup['OnAndOff'] =  config.getboolean(vSec,  'OnAndOff')
+            except: dictGroup['OnAndOff'] =  True 
+            dictGroups[countSwitchGroups] = dictGroup
+            countSwitchGroups = countSwitchGroups + 1
+        elif vSec[:6] == 'Switch':
+            dictSwitch = {}
+            dictSwitch['switch'] = vSec
+            dictSwitch['protocol'] =  config.get(vSec,  'protocol')
+            dictSwitch['name'] =  config.get(vSec,  'name')
+            dictSwitch['id'] =  config.getint(vSec,  'id')
+            try: dictSwitch['unit'] =  config.getint(vSec,  'unit')
+            except:  dictSwitch['unit'] =  None
+            dictSwitch['group'] =  config.get(vSec,  'group')
+            try: dictSwitch['switchgroup'] = config.get(vSec,  'switchgroup')
+            except: dictSwitch['switchgroup'] = None
+            try: dictSwitch['alarm'] =  config.getboolean(vSec,  'alarm')
+            except: dictSwitch['alarm'] =  False
+            try: dictSwitch['slideshow'] =  config.getboolean(vSec,  'slideshow')
+            except: dictSwitch['slideshow'] =  False
+            try: dictSwitch['OnAndOff'] =  config.getboolean(vSec,  'OnAndOff')
+            except: dictSwitch['OnAndOff'] =  True      
+            dictSwitches[countSwitches] = dictSwitch
+            countSwitches = countSwitches + 1
             
     config = None
     
@@ -73,6 +88,21 @@ def sensorPHPConf(vVerbose='start'):
         vhttpResult += ');\n'
 
     vhttpResult += '\n'
+    for vS in dictGroups:
+        vhttpResult += '$arrSwitchGroups[] = array ( \"'
+        vhttpResult += str(vS)
+        vhttpResult += '\", \"'
+        vhttpResult += str(dictSwitches[vS]['group'])
+        vhttpResult += '\", \"'
+        vhttpResult += str(dictGroups[vS]['switchgroup'])
+        vhttpResult += '\", '
+        vhttpResult += str(dictGroups[vS]['slideshow'])
+        vhttpResult += ', '
+        vhttpResult += str(dictGroups[vS]['OnAndOff'])        
+        vhttpResult +=  ');\n'
+
+    vhttpResult += '\n'
+    vCSVResult = ''
     for vS in dictSwitches:
         vhttpResult += '$arrSwitches[] = array ( \"'
         vhttpResult += str(vS)
@@ -99,13 +129,20 @@ def sensorPHPConf(vVerbose='start'):
         vhttpResult += str(dictSwitches[vS]['alarm'])
         vhttpResult += ', '
         vhttpResult += str(dictSwitches[vS]['slideshow'])
+        vhttpResult += ', '
+        vhttpResult += str(dictSwitches[vS]['OnAndOff'])        
         vhttpResult +=  ');\n'
-
+        
+        vCSVResult += str(vS)
+        vCSVResult += ';'
+        vCSVResult += str(dictSwitches[vS]['switch']) 
+        vCSVResult += ';0;\n'
     vhttpResult += '\n'
 #    vhttpResult += '?>\n'
 
     #print vhttpResult
     threadCreateFile('/var/sensorTool/www/conf.php', vhttpResult) 
+    threadCreateFile('/var/sensorTool/www/switchstate.csv', vCSVResult,  'csv') 
 
-sensorPHPConf()
+#sensorPHPConf()
 # vim: tabstop=8 expandtab shiftwidth=4 softtabstop=4

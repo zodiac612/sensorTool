@@ -13,6 +13,8 @@ def sensorPHPConf(vVerbose='start'):
 
     dictSwitches = {}
     dictGroups = {}
+    dictGroups2 = {}
+    countGroups2 = 0
     countSwitches = 0
     countSwitchGroups = 0
     for vSec in config.sections():
@@ -35,6 +37,9 @@ def sensorPHPConf(vVerbose='start'):
             try: dictSwitch['unit'] =  config.getint(vSec,  'unit')
             except:  dictSwitch['unit'] =  None
             dictSwitch['group'] =  config.get(vSec,  'group')
+            if not config.get(vSec,  'group') in dictGroups2 :
+                dictGroups2[config.get(vSec,  'group')] = countGroups2
+                countGroups2 = countGroups2 + 1
             try: dictSwitch['switchgroup'] = config.get(vSec,  'switchgroup')
             except: dictSwitch['switchgroup'] = None
             try: dictSwitch['alarm'] =  config.getboolean(vSec,  'alarm')
@@ -100,6 +105,17 @@ def sensorPHPConf(vVerbose='start'):
         vhttpResult += ', '
         vhttpResult += str(dictGroups[vS]['OnAndOff'])        
         vhttpResult +=  ');\n'
+
+    vhttpResult += '\n'
+    iii = 0
+    for iii in range(countGroups2):
+        vhttpResult += '$arrSwitchTopicGroups[] = array ( \"'
+        for vS2 in dictGroups2:
+            if iii == dictGroups2[vS2]:
+                vhttpResult += str(iii)
+                vhttpResult += '\", \"'
+                vhttpResult += str(vS2)
+                vhttpResult +=  '\");\n'
 
     vhttpResult += '\n'
     vCSVResult = ''

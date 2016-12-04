@@ -2,6 +2,7 @@
 error_reporting(E_ALL); ini_set('display_errors', '1');
 
 include 'conf.php';
+include 'functions.php';
 
 echo "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">\n";
 echo "<html xmlns=\"http://www.w3.org/1999/xhtml\">\n";
@@ -19,7 +20,9 @@ include 'top_menue.php';
 $boolLCL = True;
 if ( $boolLCL ) {
 	echo "  <BR />\n";
-    include 'preswitch.php';
+	$vSwitchFrame='main';
+	include 'switch_frame.php';
+    //include 'preswitch.php';
 	echo "  <br />\n";
 	
 	if (isset($_POST['SwitchID']) AND isset($_POST['SwitchProtocol']) AND isset($_POST['SwitchAction'])  ) {

@@ -39,8 +39,9 @@ $result = $result."}";
 //echo $result;
 if ($result != "{}") {
     //echo $result;
-    exec('/home/pi/webradio/updatewebradio.sh '.base64_encode($result));
-    $arrConfig = readFileToArray($confFile);
+    exec('/home/pi/sensorTool/sh/bosestControl.sh '.base64_encode($result));
+    //echo base64_encode($result);
+//    $arrConfig = readFileToArray($confFile);
 }
 //var_dump($arrConfig);
 

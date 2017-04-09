@@ -70,25 +70,27 @@ foreach ($arrConfig as $vKey => $vValue)
 echo "<DIV class=\"webradio7\">\n";
 echo "	  <table class=\"webradio7\">\n";// bgcolor=\"#FFFFFF\" Border=1>\n";
 echo "	    <tr>\n";
+//var_dump($arrWebradio);
 foreach ( $arrWebradio as $key => $element ) {
 	#echo $key.'#'.var_dump($element);
 	$boolWebradioStationVisible = True;
 	if ( $vWebFrame == 'slideshow') {
-		$boolWebradioStationVisible = $element[6];
+		$boolWebradioStationVisible = $element[7];
 	} else {
-		$boolWebradioStationVisible = $element[5];
+		$boolWebradioStationVisible = $element[6];
 	}
 	
 	if ( $boolWebradioStationVisible ) {
-		if ( $configName == $element[2]) {
-		    echo "<td class=\"webradio7start\">\n";
-		} else {
+		//if ( $configName == $element[2]) {
+		//    echo "<td class=\"webradio7start\">\n";
+		//} else {
     		echo "<td class=\"webradio7\">\n";
-		}
+		//}
         echo "	<form action=\"webradio_change.php\" method=\"post\" target=\"hidden-form\">\n";
-		echo "    <input type=\"hidden\" name=\"volume\" value=\"".$element[3]."\"></input>";
+		echo "    <input type=\"hidden\" name=\"preset\" value=\"".$element[3]."\"></input>";
 		echo "    <input type=\"hidden\" name=\"name\" value=\"".$element[2]."\"></input>";
-		echo "    <input type=\"hidden\" name=\"stream\" value=\"".$element[4]."\"></input>";
+		echo "    <input type=\"hidden\" name=\"volumeM\" value=\"".$element[4]."\"></input>";
+		echo "    <input type=\"hidden\" name=\"volumeS\" value=\"".$element[5]."\"></input>";
 		echo "    <input type=\"submit\" name=\"action\" value=\"".$element[2]."\"></input>";
 		echo "	</form>\n";
 		echo "</td>\n";		

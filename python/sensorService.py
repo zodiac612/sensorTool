@@ -3,7 +3,7 @@
 
 from   rfm69 import Rfm69
 import rfm69
-import bme280
+#import bme280
 from   sensors import rawsensor
 import time, datetime  # time functions
 import ast
@@ -75,7 +75,7 @@ if vDebug:
  
 data = []
 dictSensors = {}
-dictSensors['bme280'] = {}
+#dictSensors['bme280'] = {}
 
 # Werte empfangene Daten bis MAXTIME aus
 # while time.strftime('%H%M') < MAXTIME:
@@ -145,19 +145,19 @@ while 1:
         pass
 
     # bme280 values to dictsensor
-    try:
-        (degC, hPa, hRel) = bme280.readData()
-        dictSensors['bme280']['Time'] = vNow
-        dictSensors['bme280']['T'] = round(degC, 2)
-        dictSensors['bme280']['RH'] = round(hRel, 2)
-        dictSensors['bme280']['hPa'] = round(hPa, 2)
-        vNew = False
-    except Exception as e:
-        if vDebug:
-            fileHandle = open ('/var/sensorTool/sServiceErr.log', 'a')
-            fileHandle.write (str(datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'))+ ': ' + str(e) + '\n')
-            fileHandle.close()
-        pass    
+#    try:
+#        (degC, hPa, hRel) = bme280.readData()
+#        dictSensors['bme280']['Time'] = vNow
+#        dictSensors['bme280']['T'] = round(degC, 2)
+#        dictSensors['bme280']['RH'] = round(hRel, 2)
+#        dictSensors['bme280']['hPa'] = round(hPa, 2)
+#        vNew = False
+#    except Exception as e:
+#        if vDebug:
+#            fileHandle = open ('/var/sensorTool/sServiceErr.log', 'a')
+#            fileHandle.write (str(datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'))+ ': ' + str(e) + '\n')
+#            fileHandle.close()
+#        pass    
     
     # Betrachte nur La Crosse Daten
     if str(obj)[0:3] == 'La ':

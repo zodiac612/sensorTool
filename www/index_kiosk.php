@@ -65,5 +65,6 @@ echo "<div  class=\"stframe\">\n";
         echo "</div>\n";
     echo "</div>\n";
 echo "</div>\n";
+echo "<IFRAME style=\"display:none\" name=\"hidden-form\"></IFRAME>\n";
 echo "</body>\n";
 ?>

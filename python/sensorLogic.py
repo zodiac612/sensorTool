@@ -276,6 +276,7 @@ refreshTime_LANDevices = time.time() + INTERVAL_LANDEVICES
 qNDD = Queue.LifoQueue(maxsize=1)
 DiscoveryInProgress = False
 refreshTime_Queue = 5
+refreshTime_Diag = 1800
 INTERVAL_QUEUE = 5
 refreshTime_webradioMotion = time.time() + webradio_motionTimeOut
 INTERVAL_BLOCKED = 20
@@ -362,8 +363,8 @@ while time.strftime('%H%M') < MAXTIME:  # timeDuration <= MAXTIME:
             dictActors = threadFritzActors2()
                 
             # On Startup stop running radiators
-            if vBoolLC:# and not FAInProgress:
-                dictActors[str(dictSensors[iControlSensor].GetFritzActor())].SetActor(False)
+            #if vBoolLC:# and not FAInProgress:
+                #dictActors[str(dictSensors[iControlSensor].GetFritzActor())].SetActor(False)
         refreshTime_fritzactors = time.time() + INTERVAL_FRITZACTORS
     
     # Check if there is a webradio setting change
@@ -744,12 +745,14 @@ while time.strftime('%H%M') < MAXTIME:  # timeDuration <= MAXTIME:
 
         threadCreateFile('/var/sensorTool/www/alarm.csv', strAlarm,  'csv')
 #        thread.start_new_thread(threadCreatePHPFile, ('/var/sensorTool/www/sensor.php', getHTML(),))        
-
-        plotting_DeviceValues(dictActiveModules,  '1_Modules',  vVerbose)
-        plotting_DeviceValues(dictTemperature, '3_Temperature',  vVerbose,  -20,  50)
-        plotting_DeviceValues(dictRelativeHumidity, '4_Relative_Humidity',  vVerbose)
-        plotting_DeviceValues(dictAbsoluteHumidity, '2_Absolute_Humidity',  vVerbose,  0,  30)
-        plotting_DeviceValues(dictPressure, '9_Pressure',  vVerbose,  700,  1100)
+    
+        #if time.time() > refreshTime_Diag:
+        #    plotting_DeviceValues(dictActiveModules,  '1_Modules',  vVerbose)
+        #    plotting_DeviceValues(dictTemperature, '3_Temperature',  vVerbose,  -20,  50)
+        #    plotting_DeviceValues(dictRelativeHumidity, '4_Relative_Humidity',  vVerbose)
+        #    plotting_DeviceValues(dictAbsoluteHumidity, '2_Absolute_Humidity',  vVerbose,  0,  30)
+        #    plotting_DeviceValues(dictPressure, '9_Pressure',  vVerbose,  700,  1100)
+        #    refreshTime_Diag = time.time() + 1800
         
 #        thread.start_new_thread(plotting, (dictPlotSens, dictPlotAussen, vVerbose,))
           

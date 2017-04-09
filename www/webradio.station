@@ -1,6 +1,9 @@
 [running]
 volume = 0
 name = Radio 8
+preset = PRESET_1
+volumeM = 10
+volumeS = 5
 stream = http://stream.radio8.de:8000/live
 action = start
 changed = True

@@ -746,14 +746,14 @@ while time.strftime('%H%M') < MAXTIME:  # timeDuration <= MAXTIME:
         threadCreateFile('/var/sensorTool/www/alarm.csv', strAlarm,  'csv')
 #        thread.start_new_thread(threadCreatePHPFile, ('/var/sensorTool/www/sensor.php', getHTML(),))        
     
-        #if time.time() > refreshTime_Diag:
-        #    plotting_DeviceValues(dictActiveModules,  '1_Modules',  vVerbose)
-        #    plotting_DeviceValues(dictTemperature, '3_Temperature',  vVerbose,  -20,  50)
-        #    plotting_DeviceValues(dictRelativeHumidity, '4_Relative_Humidity',  vVerbose)
-        #    plotting_DeviceValues(dictAbsoluteHumidity, '2_Absolute_Humidity',  vVerbose,  0,  30)
+        if time.time() > refreshTime_Diag:
+            plotting_DeviceValues(dictActiveModules,  '1_Modules',  vVerbose)
+            plotting_DeviceValues(dictTemperature, '3_Temperature',  vVerbose,  -20,  50)
+            plotting_DeviceValues(dictRelativeHumidity, '4_Relative_Humidity',  vVerbose)
+            plotting_DeviceValues(dictAbsoluteHumidity, '2_Absolute_Humidity',  vVerbose,  0,  30)
         #    plotting_DeviceValues(dictPressure, '9_Pressure',  vVerbose,  700,  1100)
-        #    refreshTime_Diag = time.time() + 1800
-        
+            refreshTime_Diag = time.time() + 1800
+       
 #        thread.start_new_thread(plotting, (dictPlotSens, dictPlotAussen, vVerbose,))
           
         if vVerbose.startswith('test'):

@@ -12,7 +12,8 @@ def sensorSwitches(PathToConfig='/home/pi/sensorTool/switches.conf', vVerbose='s
     dictGroups = {}
     GroupCount = 0
     for vSec in config.sections():
-	if vSec[:6] == 'Switch':
+        
+        if vSec[:6] == 'Switch':
             vGroup = config.get(vSec,  'group')
             boolDings = False
             for vGi in dictGroups:
@@ -32,17 +33,17 @@ def sensorSwitches(PathToConfig='/home/pi/sensorTool/switches.conf', vVerbose='s
         dictSwitches = {}
         CountSwitch = 0
         for vSec in config.sections():
-	  if vSec[:6] == 'Switch':
-            vGroup = config.get(vSec,  'group')
-            if dictGroups[vKGroup]['name'] == vGroup:
-                CountSwitch = CountSwitch + 1
-                dictSwitch = {}
-                dictSwitch['protocol'] = config.get(vSec,  'protocol')
-                dictSwitch['id'] =  config.get(vSec,  'id') 
-                try:    dictSwitch['unit'] = config.get(vSec, 'unit')
-                except: dictSwitch['unit'] = None
-                dictSwitch['name'] =  config.get(vSec,  'name')
-                dictSwitches[CountSwitch] = dictSwitch
+            if vSec[:6] == 'Switch':
+                vGroup = config.get(vSec,  'group')
+                if dictGroups[vKGroup]['name'] == vGroup:
+                    CountSwitch = CountSwitch + 1
+                    dictSwitch = {}
+                    dictSwitch['protocol'] = config.get(vSec,  'protocol')
+                    dictSwitch['id'] =  config.get(vSec,  'id') 
+                    try:    dictSwitch['unit'] = config.get(vSec, 'unit')
+                    except: dictSwitch['unit'] = None
+                    dictSwitch['name'] =  config.get(vSec,  'name')
+                    dictSwitches[CountSwitch] = dictSwitch
         dictGroups[vKGroup]['switches'] = dictSwitches
      
     #for vGroup in dictGroups:

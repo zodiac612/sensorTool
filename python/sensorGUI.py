@@ -215,7 +215,7 @@ class App:
         self.frameInFrameMenu2=Frame(self.frameMenu2, bg=self.bgBase,  highlightbackground=framebg, highlightthickness=frameline)
         self.frameInFrameMenu2.grid(row=0,  column=0,  sticky=SE)
         #self.frameInFrameMenu2.grid_columnconfigure(0,weight=1)
-        sleep (3)
+        #sleep (3)
 
         with open('/var/sensorTool/www/sensor.csv', 'rb') as csvfile:
             spamreader = csv.reader(csvfile, delimiter=';')#, quotechar='|')
@@ -232,7 +232,7 @@ class App:
             Label(self.frameInFrameMenu2,text='RH ', bg=self.bgBase,  fg=textfg, font=tFont).grid(row=iRow,column=iCol,  sticky=E)
             iRow = iRow + 1
             for row in spamreader:
-                if row[0]=='Vorgarten' or row[0]=='Terrasse' or row[0]=='Keller':
+         #       if row[0]=='Vorgarten' or row[0]=='Terrasse' or row[0]=='Keller':
                     iCol=0
                     #Label(self.frameInFrameMenu2,text=row[0], bg=self.bgBase,  fg=textfg,  highlightbackground=framebg, highlightthickness=frameline).grid(row=iRow,column=iCol,  sticky=W)
                     Label(self.frameInFrameMenu2,text=row[0], bg=self.bgBase,  fg=textfg, font=tFont).grid(row=iRow,column=iCol,  sticky=W)
@@ -242,7 +242,7 @@ class App:
                     Label(self.frameInFrameMenu2,text=row[2]+'|', bg=self.bgBase,  fg=textfg, font=tFont).grid(row=iRow,column=iCol,  sticky=E)
                     iCol = iCol + 1
                     Label(self.frameInFrameMenu2,text=row[3]+' ', bg=self.bgBase,  fg=textfg, font=tFont).grid(row=iRow,column=iCol,  sticky=E)
-                iRow = iRow + 1
+                    iRow = iRow + 1
 
         Label(self.frameInFrameMenu2,text='', bg=self.bgBase,  fg=textfg, font=self.dividerFont).grid(row=iRow,column=0,  columnspan=4)
         iRow = iRow + 1
